@@ -13,31 +13,31 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         CredentialsProvider({
             async authorize(credentials) {
                 await connectToMongoDB();
-              
+
                 if (!credentials?.email || !credentials?.password) {
-                  console.log("Email or password missing");
-                  return null;
+                    console.log("Email or password missing");
+                    return null;
                 }
-              
+
                 const user = await User.findOne({ email: credentials.email }) as { _id: string, email: string, fullName: string, password: string };
                 if (!user) {
-                  console.log("User not found");
-                  return null;
+                    console.log("User not found");
+                    return null;
                 }
-              
+
                 const isValid = await bcrypt.compare(credentials.password.toString(), user.password);
                 if (!isValid) {
-                  console.log("Invalid password");
-                  return null;
+                    console.log("Invalid password");
+                    return null;
                 }
-              
+
                 console.log("User authorized:", user);
                 return {
-                  id: user._id.toString(),
-                  email: user.email,
-                  name: user.fullName,
+                    id: user._id.toString(),
+                    email: user.email,
+                    name: user.fullName,
                 };
-              }
+            }
         })
     ],
 

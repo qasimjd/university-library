@@ -55,7 +55,7 @@ const AuthForm = <T extends FieldValues>({
       router.push("/");
       toast.success("Welcome to BookWise");
     } else {
-      toast("Something went wrong");
+      toast.error(result.error);
     }
   };
 
