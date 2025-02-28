@@ -1,32 +1,19 @@
-import mongoose, { Mongoose } from 'mongoose';
+import mongoose, { Connection } from "mongoose";
 
-const MONGODB_URL = process.env.DATABASE_URL;
+let cachedConnection: Connection | null = null;
 
-interface MongooseConnection {
-  conn: Mongoose | null;
-  promise: Promise<Mongoose> | null;
-}
-
-let cached: MongooseConnection = (global as any).mongoose
-
-if(!cached) {
-  cached = (global as any).mongoose = { 
-    conn: null, promise: null 
+export async function connectToMongoDB() {
+  if (cachedConnection) {
+    console.log("Using cached db connection");
+    return cachedConnection;
   }
-}
-
-export const connectDB = async () => {
-  if(cached.conn) return cached.conn;
-
-  if(!MONGODB_URL) throw new Error('Missing MONGODB_URL');
-
-  cached.promise = 
-    cached.promise || 
-    mongoose.connect(MONGODB_URL, { 
-      dbName: 'bookWise', bufferCommands: false 
-    })
-
-  cached.conn = await cached.promise;
-
-  return cached.conn;
+  try {
+    const cnx = await mongoose.connect(process.env.MONGODB_URI!);
+    cachedConnection = cnx.connection;
+    console.log("New mongodb connection established");
+    return cachedConnection;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
 }

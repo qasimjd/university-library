@@ -1,25 +1,22 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
+import bcrypt from "bcryptjs";
 
-// Define Role Enum
 export enum UserRole {
   USER = "user",
   ADMIN = "admin",
 }
 
-// Define Status Enum
 export enum UserStatus {
   PENDING = "pending",
   APPROVE = "approve",
   REJECT = "reject",
 }
 
-// Define Borrow Status Enum
 export enum UserBorrowStatus {
   BORROW = "borrow",
   RETURN = "return",
 }
 
-// Define User Interface
 export interface IUser extends Document {
   fullName: string;
   email: string;
@@ -30,9 +27,9 @@ export interface IUser extends Document {
   borrowStatus: UserBorrowStatus;
   role: UserRole;
   lastActive: Date;
+  comparePassword(candidatePassword: string): Promise<boolean>;
 }
 
-// Define Schema
 const UserSchema: Schema<IUser> = new Schema(
   {
     fullName: { type: String, required: true },
@@ -60,6 +57,22 @@ const UserSchema: Schema<IUser> = new Schema(
   { timestamps: true }
 );
 
-const User: Model<IUser> = mongoose.models.User || mongoose.model<IUser>("User", UserSchema);
+UserSchema.pre<IUser>("save", async function (next) {
+  if (!this.isModified("password")) return next();
+
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(this.password as string, salt);
+  this.password = hashedPassword;
+
+  next();
+});
+
+UserSchema.methods.comparePassword = async function (
+  candidatePassword: string
+): Promise<boolean> {
+  return bcrypt.compare(candidatePassword, this.password as string);
+};
+
+const User: Model<IUser> = mongoose.models?.User || mongoose.model("User", UserSchema);
 
 export default User;

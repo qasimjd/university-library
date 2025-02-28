@@ -6,6 +6,7 @@ import { ReactNode } from "react";
 import { Toaster } from "@/components/ui/sonner"
 import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
+import { connectToMongoDB } from "@/lib/mongodb";
 
 const ibmPlexSans = localFont({
   src: [
@@ -30,8 +31,10 @@ export const metadata: Metadata = {
 };
 
 const RootLayout = async ({ children }: { children: ReactNode }) => {
+
   const session = await auth();
 
+  connectToMongoDB();
   return (
     <html lang="en">
       <SessionProvider session={session}>
