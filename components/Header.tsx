@@ -13,7 +13,9 @@ const Header = ({ session }: { session: Session }) => {
 
       <ul className="flex flex-row items-center gap-8">
         <li className="text-white">
-          Library
+          <Link href="/admin">
+            Library
+          </Link>
         </li>
 
         <li>

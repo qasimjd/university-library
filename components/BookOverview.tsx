@@ -2,6 +2,7 @@ import Image from 'next/image'
 import React from 'react'
 import { Button } from './ui/button'
 import BookCover from './BookCover'
+import { IBook } from '@/database/Models/book.modle'
 
 const BookOverview = async ({
     title,
@@ -12,10 +13,9 @@ const BookOverview = async ({
     availableCopies,
     description,
     coverColor,
-    coverImage,
-    id,
-    createdAt,
-}: Book) => {
+    coverUrl,
+
+}: IBook ) => {
     return (
         <main>
             <section className='book-overview'>
@@ -64,14 +64,14 @@ const BookOverview = async ({
                             variant='wide'
                             className='z-10'
                             coverColor={coverColor}
-                            coverImage={coverImage}
+                            coverUrl={coverUrl}
                         />
 
                         <div className='absolute left-16 top-12 rotate-12 opacity-40 max-sm:hidden'>
                             <BookCover
                                 variant='wide'
                                 coverColor={coverColor}
-                                coverImage={coverImage}
+                                coverUrl={coverUrl}
                             />
                         </div>
                     </div>

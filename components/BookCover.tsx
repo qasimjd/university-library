@@ -4,6 +4,8 @@ import React from "react";
 import { cn } from "@/lib/utils";
 import BookCoverSvg from "@/components/BookCoverSvg";
 import Image from "next/image";
+import { IKImage } from "imagekitio-next";
+import config from "@/lib/config";
 
 type BookCoverVariant = "extraSmall" | "small" | "medium" | "regular" | "wide";
 
@@ -19,14 +21,14 @@ interface Props {
   className?: string;
   variant?: BookCoverVariant;
   coverColor: string;
-  coverImage: string;
+  coverUrl: string;
 }
 
 const BookCover = ({
   className,
   variant = "regular",
   coverColor = "#012B48",
-  coverImage = "https://placehold.co/400x600.png",
+  coverUrl = "https://placehold.co/400x600.png",
 }: Props) => {
   return (
     <div
@@ -42,7 +44,21 @@ const BookCover = ({
         className="absolute z-10"
         style={{ left: "12%", width: "87.5%", height: "88%" }}
       >
-       <Image src={coverImage} alt="book cover" layout="fill" className="rounded-sm object-fill" />
+        {coverUrl && !coverUrl.includes("http") ? (
+          <IKImage
+            path={coverUrl}
+            urlEndpoint={config.env.imagekit.urlEndpoint}
+            alt="Book cover"
+            fill
+            className="rounded-sm object-fill"
+            loading="lazy"
+            lqip={{ active: true }}
+          />) :
+          (
+
+            <Image src={coverUrl} alt="book cover" fill className="rounded-sm object-fill" />)}
+
+
       </div>
     </div>
   );

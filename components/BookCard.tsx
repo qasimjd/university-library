@@ -6,19 +6,19 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 
 const BookCard = ({
-  id,
+  _id,
   title,
   genre,
   coverColor,
-  coverImage,
+  coverUrl,
   isLoanedBook = false,
 }: Book) => (
   <li className={cn(isLoanedBook && "xs:w-52 w-full")}>
     <Link
-      href={`/books/${id}`}
+      href={`/books/${_id}`}
       className={cn(isLoanedBook && "w-full flex flex-col items-center")}
     >
-      <BookCover coverColor={coverColor} coverImage={coverImage} />
+      <BookCover coverColor={coverColor} coverUrl={coverUrl} />
 
       <div className={cn("mt-4", !isLoanedBook && "xs:max-w-40 max-w-28")}>
         <p className="book-title">{title}</p>
