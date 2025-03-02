@@ -31,7 +31,7 @@ export const getBooks = async () => {
     try {
         await connectToMongoDB();
 
-        const books = await Book.find().lean<IBook[]>();
+        const books = await Book.find().sort({ createdAt: -1 }).lean<IBook[]>();
 
         return {
             success: true,

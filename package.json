@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "seed": "npx tsx database/seed.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^4.1.0",
@@ -20,6 +21,7 @@
     "bcryptjs": "^3.0.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "dotenv": "^16.4.7",
     "imagekit": "^6.0.0",
     "imagekitio-next": "^1.0.1",
     "lucide-react": "^0.475.0",

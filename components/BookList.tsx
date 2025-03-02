@@ -1,9 +1,10 @@
 import React from "react";
 import BookCard from "@/components/BookCard";
+import { IBook } from "@/database/Models/book.modle";
 
 interface Props {
   title: string;
-  books: Book[];
+  books: IBook[];
   containerClassName?: string;
 }
 

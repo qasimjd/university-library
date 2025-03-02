@@ -14,13 +14,15 @@ const Home = async () => {
 
   return (
     <>
-      {books && books.length > 0 && <BookOverview {...books[1]} />}
+      {books && books.length > 0 && <BookOverview {...books[0]} />}
 
-      <BookList
-        title="Latest Books"
-        books={sampleBooks}
-        containerClassName="mt-28"
-      />
+      {books && books.length > 2 && (
+        <BookList
+          title="Latest Books"
+          books={books.slice(1)}
+          containerClassName="mt-28"
+        />
+      )}
     </>
   );
 };
