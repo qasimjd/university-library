@@ -1,8 +1,9 @@
 import Image from 'next/image'
 import React from 'react'
-import { Button } from './ui/button'
 import BookCover from './BookCover'
 import { IBook } from '@/database/Models/book.modle'
+import BorrowBook from './BorrowBook'
+import { auth } from '@/auth'
 
 const BookOverview = async ({
     title,
@@ -14,8 +15,14 @@ const BookOverview = async ({
     description,
     coverColor,
     coverUrl,
+    _id
 
-}: IBook ) => {
+}: IBook) => {
+
+    const session = await auth()
+    const userId = session?.user?.id
+    if (!userId) return null
+
     return (
         <main>
             <section className='book-overview'>
@@ -51,10 +58,7 @@ const BookOverview = async ({
 
                     <p className="book-description">{description}</p>
 
-                    <Button className='book-overview_btn'>
-                        <Image src="/icons/book.svg" alt="star" width={20} height={20} />
-                        <p className='font-bebas-neue text-xl text-dark-100'>Borrow</p>
-                    </Button>
+                    <BorrowBook userId={userId} bookId={_id.toString()}/>
 
                 </div>
 

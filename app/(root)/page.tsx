@@ -1,6 +1,5 @@
 import BookList from "@/components/BookList";
 import BookOverview from "@/components/BookOverview";
-import { sampleBooks } from "@/constants";
 import { getBooks } from "@/lib/admin/actions/book.action";
 
 const Home = async () => {
