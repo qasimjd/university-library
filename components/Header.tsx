@@ -2,19 +2,28 @@ import Link from "next/link";
 import Image from "next/image";
 import { Avatar, AvatarFallback } from "./ui/avatar";
 import { Session } from "next-auth";
+import { signOut } from "next-auth/react";
+import { LogOut } from "lucide-react";
 
 const Header = ({ session }: { session: Session }) => {
 
   return (
-    <header className="my-10 flex justify-between items-center gap-5">
-      <Link href="/">
-        <Image src="/icons/logo.svg" alt="logo" width={40} height={40} />
+    <header className="mt-6 flex justify-between items-center gap-6">
+      <Link href="/" className="flex items-center gap-2">
+        <Image src="/icons/logo.svg" alt="logo" width={37} height={37} />
+        <h1 className="text-2xl font-semibold text-gray-200 max-md:hidden">BooWise</h1>
       </Link>
 
-      <ul className="flex flex-row items-center gap-8">
+      <ul className="flex flex-row gap-4 items-center">
+        <li className="text-white">
+          <Link href="/">
+            Home
+          </Link>
+        </li>
+
         <li className="text-white">
           <Link href="/admin">
-            Library
+            search
           </Link>
         </li>
 
@@ -27,6 +36,20 @@ const Header = ({ session }: { session: Session }) => {
             </Avatar>
           </Link>
         </li>
+
+        <li>
+          <form
+            action={async () => {
+              "use server";
+
+              await signOut();
+            }}
+            className=""
+          >
+            <LogOut size={24} className="text-red-600" />
+          </form>
+        </li>
+
       </ul>
     </header>
   );

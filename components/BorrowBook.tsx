@@ -2,8 +2,7 @@
 
 import Image from 'next/image'
 import { Button } from './ui/button'
-import { borroBook } from '@/lib/admin/actions/book.action'
-import { Types } from 'mongoose'
+import { borrowBook } from '@/lib/admin/actions/book.action'
 import { toast } from 'sonner'
 import { useState } from 'react';
 
@@ -14,8 +13,7 @@ const BorrowBook = ({ userId, bookId }: { userId: string, bookId: string }) => {
     const handleBorroBook = async () => {
         try {
             setBorrowing(true)
-            toast.info('Borrowing book...')
-            const result = await borroBook({ userId, bookId });
+            const result = await borrowBook({ userId, bookId });
             if (result.success) {
                 toast.success('Book borrowed successfully')
             } else {

@@ -23,7 +23,7 @@ export interface IUser extends Document {
   password: string;
   universityId: number;
   universityCard: string;
-  borrowBooksRecord: Types.ObjectId[];
+  borrowBooksIds: Types.ObjectId[];
   status: UserStatus;
   borrowStatus: UserBorrowStatus;
   role: UserRole;
@@ -38,7 +38,7 @@ const UserSchema: Schema<IUser> = new Schema(
     password: { type: String, required: true },
     universityId: { type: Number, required: true },
     universityCard: { type: String, required: true },
-    borrowBooksRecord: [{ type: Schema.Types.ObjectId, ref: "Book" }],
+    borrowBooksIds: [{ type: Schema.Types.ObjectId, ref: "Book" }],
     status: {
       type: String,
       enum: Object.values(UserStatus),
