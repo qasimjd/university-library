@@ -5,7 +5,7 @@ import { connectToMongoDB } from "@/lib/mongodb";
 import dayjs from "dayjs";
 import { z } from "zod";
 import { bookSchema } from "@/lib/valiations";
-import BorrowRecord, { IBorrowRecord } from "@/database/Models/borrowRecords";
+import BorrowRecord from "@/database/Models/borrowRecords";
 import User, { IUser } from "@/database/Models/user.model";
 
 type CreateBookParams = z.infer<typeof bookSchema>;

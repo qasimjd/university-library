@@ -4,6 +4,7 @@ import BookCover from './BookCover'
 import { IBook } from '@/database/Models/book.modle'
 import BorrowBook from './BorrowBook'
 import { auth } from '@/auth'
+import User from '@/database/Models/user.model'
 
 const BookOverview = async ({
     title,
@@ -22,6 +23,9 @@ const BookOverview = async ({
     const session = await auth()
     const userId = session?.user?.id
     if (!userId) return null
+
+    const user = await User.findOne({ _id: userId });
+    const hasBorrowed = user?.borrowBooksIds?.some((id) => id.toString() === _id.toString());
 
     return (
         <main>
@@ -58,7 +62,7 @@ const BookOverview = async ({
 
                     <p className="book-description">{description}</p>
 
-                    <BorrowBook userId={userId} bookId={_id.toString()}/>
+                    <BorrowBook userId={userId} bookId={_id.toString()} hasBorrowed={!!hasBorrowed} />
 
                 </div>
 

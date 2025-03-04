@@ -79,3 +79,20 @@ export async function signUp(params: Partial<IUser>) {
     return { success: false, error: "Something went wrong in creating User" };
   }
 }
+
+export async function getUserProfile(userId: string) {
+  await connectToMongoDB();
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return { success: false, error: "User not found" };
+    }
+
+    return { success: true, data: JSON.parse(JSON.stringify(user)) };
+  }
+  catch (error) {
+    console.error("Error in getUserProfile:", error);
+    return { success: false, error: "Error in fetching user profile" };
+  }
+};
