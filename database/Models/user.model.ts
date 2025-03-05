@@ -28,6 +28,8 @@ export interface IUser extends Document {
   borrowStatus: UserBorrowStatus;
   role: UserRole;
   lastActive: Date;
+  createdAt: Date;
+  updatedAt: Date;
   comparePassword(candidatePassword: string): Promise<boolean>;
 }
 

@@ -4,9 +4,6 @@
 
 @layer components {
 
-    * {
-        color: rgb(246, 246, 246);
-    }
     .admin-container {
         @apply flex w-[calc(100%-264px)] flex-1 flex-col bg-dark-300 p-5 xs:p-10;
     }
@@ -21,11 +18,11 @@
     }
 
     .confirm-approve {
-        @apply bg-green-800 text-green-100 hover:bg-green-800/70 !important;
+        @apply bg-gray-800 text-green-100 hover:bg-gray-700/70 !important;
     }
 
     .confirm-reject {
-        @apply bg-red-800 text-red-100 hover:bg-red-800/70 !important;
+        @apply bg-gray-800 text-red-100 hover:bg-gray-800/70 !important;
     }
 
     .confirm-content {
@@ -156,7 +153,7 @@
 
     /* Header */
     .admin-header {
-        @apply flex lg:items-end items-start justify-between lg:flex-row flex-col gap-5 sm:mb-10 mb-5;
+        @apply flex lg:items-end items-start justify-between lg:flex-row flex-col gap-5 ;
     }
 
     /* Search */

@@ -5,8 +5,10 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { IBook } from "@/database/Models/book.modle";
+import { auth } from "@/auth";
+import User from "@/database/Models/user.model";
 
-const BookCard = ({
+const BookCard = async ({
   _id,
   title,
   genre,
@@ -14,7 +16,14 @@ const BookCard = ({
   coverUrl,
 }: IBook) => {
 
-  const isLoanedBook = false;
+  const session = await auth()
+  const userId = session?.user?.id
+  if (!userId) return null
+  
+  const user = await User.findOne({ _id: userId });
+  const hasBorrowed = user?.borrowBooksIds?.some((id) => id.toString() === _id.toString());
+  const isLoanedBook = hasBorrowed;
+  
   return (
     <li className={cn(isLoanedBook && "xs:w-52 w-full")}>
       <Link

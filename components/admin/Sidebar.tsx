@@ -24,7 +24,7 @@ const Sidebar = ({ session }: { session: Session }) => {
           <h1>BookWise</h1>
         </div>
 
-        <div className="mt-10 flex flex-col gap-5">
+        <div className="mt-10 flex flex-col text-gray-100 gap-5">
           {adminSideBarLinks.map((link) => {
             const isSelected =
               (link.route !== "/admin" &&
@@ -37,7 +37,7 @@ const Sidebar = ({ session }: { session: Session }) => {
                 <div
                   className={cn(
                     "link",
-                    isSelected && "bg-primary-admin shadow-sm",
+                    isSelected && "bg-primary-admin shadow-sm text-white",
                   )}
                 >
                   <div className="relative size-5">
@@ -59,7 +59,7 @@ const Sidebar = ({ session }: { session: Session }) => {
         </div>
       </div>
 
-      <div className="user">
+      <div className="user text-gray-100">
         <Avatar>
           <AvatarFallback className="bg-primary-admin">
             {session?.user?.name?.charAt(0) || "U"}
