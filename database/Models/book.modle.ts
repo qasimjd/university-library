@@ -14,6 +14,8 @@ export interface IBook {
     coverColor: string;
     videoUrl?: string;
     summary: string;
+    createdAt: Date;
+    updatedAt: Date;  
 }
 
 const BookSchema = new Schema<IBook>({

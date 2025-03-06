@@ -18,7 +18,6 @@ import AdminSelect from "./AdminSelect";
 const AdminTable = ({ users }: { users: IUser[] }) => {
     return (
         <div className="m-2 p-4 bg-gray-900 border border-gray-700 rounded-lg shadow-lg flex flex-col gap-4">
-            <h1 className="text-2xl text-white mb-4 font-semibold">All Users</h1>
             <div className="overflow-y-auto max-h-[calc(100vh-200px)]"> {/* Scrollable container */}
                 <Table className="border-collapse w-full">
                     <TableCaption className="text-gray-400">
@@ -26,9 +25,9 @@ const AdminTable = ({ users }: { users: IUser[] }) => {
                     </TableCaption>
 
                     {/* Table Header */}
-                    <TableHeader className="bg-gray-800 sticky top-0 z-10">
+                    <TableHeader className="bg-primary-admin sticky top-0 z-10">
                         <TableRow className="hover:bg-gray-900 border-none">
-                            <TableHead className="text-gray-300">Name</TableHead>
+                            <TableHead className="w-[340px] text-gray-300">Name</TableHead>
                             <TableHead className="w-[150px] text-gray-300">Date Joined</TableHead>
                             <TableHead className="w-[120px] text-center text-gray-300">Role</TableHead>
                             <TableHead className="text-gray-300 text-center">Books Borrowed</TableHead>

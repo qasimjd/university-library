@@ -1,6 +1,7 @@
 "use server";
 
 import { auth } from "@/auth";
+import Book from "@/database/Models/book.modle";
 import User, { IUser, UserRole } from "@/database/Models/user.model";
 import { connectToMongoDB } from "@/lib/mongodb";
 import { revalidatePath } from "next/cache";
@@ -53,3 +54,18 @@ export const toggleStatus = async (userId: string) => {
         return { success: false, message: "Failed to update user role" };
     }
 }
+
+export const deleteBookModle = async (bookId: string) => {
+    try {
+        connectToMongoDB();
+        const book = await Book.findByIdAndDelete(bookId);
+        if (!book) {
+            return { succes: false, message: "Book not found" };
+        }
+        revalidatePath("/admin/books");
+        return { succes: true, message: "Book deleted successfully" };
+    } catch (error) {
+        console.log(error);
+        return { succes: false, message: "faild to delete book" };
+    }
+};
