@@ -9,9 +9,9 @@ import {
 } from "@/components/ui/table";
 import { IBook } from "@/database/Models/book.modle";
 import { formatCreatedAt } from "@/lib/utils";
-import ClientImage from "./ClientImage";
+import ClientImage from "../ClientImage";
 import Link from "next/link";
-import { DeleteBookDialog } from "./DeleteUserModal";
+import { DeleteBookDialog } from "../DeleteUserModal";
 
 
 const AdminTable = ({ allBooks }: { allBooks: IBook[] }) => {

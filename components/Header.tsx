@@ -2,8 +2,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { Avatar, AvatarFallback } from "./ui/avatar";
 import { Session } from "next-auth";
-import { signOut } from "next-auth/react";
 import { LogOut } from "lucide-react";
+import { signOut } from "@/auth";
 
 const Header = ({ session }: { session: Session }) => {
 
@@ -44,9 +44,11 @@ const Header = ({ session }: { session: Session }) => {
 
               await signOut();
             }}
-            className=""
+            className=" cursor-pointer"
           >
-            <LogOut size={24} className="text-red-600" />
+            <button type="submit">
+              <LogOut size={24} className="text-red-600" />
+            </button>
           </form>
         </li>
 

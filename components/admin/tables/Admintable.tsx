@@ -11,9 +11,10 @@ import { IUser } from "@/database/Models/user.model";
 import Link from "next/link";
 import { LinkIcon } from "lucide-react";
 import { formatCreatedAt } from "@/lib/utils";
-import { Avatar, AvatarFallback } from "../ui/avatar";
-import DeleteUserModal from "./DeleteUserModal";
+import { Avatar, AvatarFallback } from "../../ui/avatar";
+import DeleteUserModal from "../DeleteUserModal";
 import AdminSelect from "./AdminSelect";
+import UniversityIdCard from "../UniversityIdCard";
 
 const AdminTable = ({ users }: { users: IUser[] }) => {
     return (
@@ -63,7 +64,7 @@ const AdminTable = ({ users }: { users: IUser[] }) => {
 
                                 {/* Role Dropdown */}
                                 <TableCell className="border-none text-center">
-                                    <AdminSelect selectOption={user.role} userId={user._id as string} />
+                                    <AdminSelect type="userRole" selectOption={user.role} userId={user._id as string} />
                                 </TableCell>
 
                                 {/* Books Borrowed */}
@@ -76,10 +77,7 @@ const AdminTable = ({ users }: { users: IUser[] }) => {
 
                                 {/* University Card */}
                                 <TableCell className="border-none">
-                                    <Link className="flex items-center gap-2" href={user.universityCard}>
-                                        <span className="text-blue-400 hover:text-blue-300">View ID card</span>
-                                        <LinkIcon color="#669df5" size={16} />
-                                    </Link>
+                                    <UniversityIdCard universityCard={user.universityCard} />
                                 </TableCell>
 
                                 {/* Delete Action */}

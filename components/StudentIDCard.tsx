@@ -2,13 +2,12 @@
 
 import dynamic from "next/dynamic";
 import { IUser } from "@/database/Models/user.model";
-import Image from "next/image";
 import { Avatar, AvatarFallback } from "./ui/avatar";
 
 const IKImage = dynamic(() => import("imagekitio-next").then((mod) => mod.IKImage), { ssr: false });
 
-const StudentIDCard = (profile: IUser) => {
-  const { fullName, email, universityCard, universityId, status } = profile;
+const StudentIDCard = ({userProfile}: {userProfile: IUser}) => {
+  const { fullName, email, universityCard, universityId, status } = userProfile;
   const urlEndpoint = process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT!;
 
   return (
@@ -28,7 +27,7 @@ const StudentIDCard = (profile: IUser) => {
             <span
               className={`w-3 h-3 rounded-full animate-pulse ease-in-out ${status.toLowerCase() === "approve"
                   ? "bg-green-500"
-                  : status.toLowerCase() === "rejected"
+                  : status.toLowerCase() === "reject"
                     ? "bg-red-700"
                     : "bg-orange-400"
                 }`}

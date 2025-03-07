@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { getBooks } from "@/lib/admin/actions/book.action";
-import AllBooksTable from "@/components/admin/AllBooksTable";
+import AllBooksTable from "@/components/admin/tables/AllBooksTable";
 
 const Page = async () => {
 

@@ -19,12 +19,12 @@ const Page = async () => {
   const books = result.data;
 
   const res = await getUserProfile(userId);
-  const profile = res.data;
-  if (!profile) return null;
+  const userProfile = res.data;
+  if (!userProfile) return null;
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <StudentIDCard {...profile} />
+        <StudentIDCard userProfile={userProfile} />
 
         {books && (<BookList title="Borrowed Books" books={books} containerClassName="mx-auto"/>)}
     </div>
