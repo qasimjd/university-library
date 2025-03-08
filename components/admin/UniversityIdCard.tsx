@@ -3,15 +3,9 @@ import {
     Dialog,
     DialogContent,
     DialogDescription,
-    DialogHeader,
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover";
 import { IKImage } from "imagekitio-next";
 import { LinkIcon } from "lucide-react";
 

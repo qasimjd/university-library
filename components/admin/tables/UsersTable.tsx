@@ -8,8 +8,6 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { IUser } from "@/database/Models/user.model";
-import Link from "next/link";
-import { LinkIcon } from "lucide-react";
 import { formatCreatedAt } from "@/lib/utils";
 import { Avatar, AvatarFallback } from "../../ui/avatar";
 import DeleteUserModal from "../DeleteUserModal";

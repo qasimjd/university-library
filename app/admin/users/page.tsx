@@ -1,4 +1,4 @@
-import AdminTable from "@/components/admin/tables/Admintable"
+import AdminTable from "@/components/admin/tables/UsersTable"
 import { getAllUsers } from "@/lib/admin/actions/user.action";
 
 

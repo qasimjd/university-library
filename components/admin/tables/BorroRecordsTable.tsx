@@ -15,6 +15,7 @@ import { IUser } from "@/database/Models/user.model";
 import { IBook } from "@/database/Models/book.modle";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import AdminSelect from "./TableSelect";
+import BorrowReceipt from "@/components/BorrowReceipt";
 
 interface BorroRecordsTableProps {
     borrowRecords: IBorrowRecord[];
@@ -115,9 +116,7 @@ const BorroRecordsTable = ({ borrowRecords }: BorroRecordsTableProps) => {
 
                                     {/* Receipt */}
                                     <TableCell className="border-none text-center text-xs">
-                                        <Link href={`/receipt/${record._id}`} passHref>
-                                            <span className="text-blue-400 hover:text-blue-300">View Receipt</span>
-                                        </Link>
+                                        <BorrowReceipt receipt={record} />
                                     </TableCell>
                                 </TableRow>
                             );
