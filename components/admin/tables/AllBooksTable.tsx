@@ -42,7 +42,7 @@ const AdminTable = ({ allBooks }: { allBooks: IBook[] }) => {
                                 <TableCell className="border-none">
                                     <Link href={`/books/${book._id}`} passHref>
                                         <div className="flex items-center gap-3 my-1">
-                                            <div className="w-8 h-11 relative">
+                                            <div className="w-9 h-11 relative">
                                                 <ClientImage
                                                     path={book.coverUrl}
                                                     alt="Book cover"

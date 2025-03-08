@@ -1,6 +1,4 @@
 import { Session } from "next-auth";
-import { Button } from "../ui/button";
-import Link from "next/link";
 
 const Header = ({ session }: { session: Session }) => {
   return (
@@ -10,9 +8,6 @@ const Header = ({ session }: { session: Session }) => {
           Welcome, {session?.user?.name}
         </h2>
         <p className="text-base text-slate-500">
-          <Button asChild className="back-btn mr-2">
-            <Link href="/">Go Back to /</Link>
-          </Button>
           Monitor all of your users and books here
         </p>
       </div>

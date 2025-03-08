@@ -85,7 +85,6 @@ export const borrowBook = async (params: BorrowParams) => {
             bookId,
             userId,
             dueDate,
-            status: "BORROWED",
         });
 
         await User.findByIdAndUpdate(userId, {

@@ -2,10 +2,10 @@
 
 import { auth } from "@/auth";
 import Book from "@/database/Models/book.modle";
+import BorrowRecord, { BORROW_STATUS_ENUM } from "@/database/Models/borrowRecords";
 import User, { IUser, UserRole, UserStatus } from "@/database/Models/user.model";
 import { connectToMongoDB } from "@/lib/mongodb";
 import { revalidatePath } from "next/cache";
-import { use } from "react";
 
 export const getAllUsers = async () => {
     const session = await auth();
@@ -58,7 +58,6 @@ export const toggleRole = async (userId: string) => {
 export const toggleStatus = async (userId: string, currentUserStatus: UserStatus) => {
     try {
         connectToMongoDB();
-        console.log(userId, currentUserStatus);
         const user = await User.findById(userId).select("status");
         if (!user) {
             return { success: false, message: "User not found" };
@@ -71,6 +70,24 @@ export const toggleStatus = async (userId: string, currentUserStatus: UserStatus
     } catch (error) {
         console.log(error);
         return { success: false, message: "Failed to update user status" };
+    }
+}
+
+export const toggleRecord = async (recordId: string, currentUserStatus: BORROW_STATUS_ENUM) => {
+    try {
+        connectToMongoDB();
+        const recorde = await BorrowRecord.findById(recordId).select("status");
+        if (!recorde) {
+            return { success: false, message: "recorde not found" };
+        }
+
+        recorde.status = currentUserStatus;
+        await recorde.save();
+        // revalidatePath("/admin/users");
+        return { success: true, message: "recorde status updated successfully" };
+    } catch (error) {
+        console.log(error);
+        return { success: false, message: "Failed to update recorde status" };
     }
 }
 
@@ -104,5 +121,25 @@ export const getRequestedUsers = async () => {
     } catch (error) {
         console.log(error);
         return null;
+    }
+};
+
+export const getborrowRecords = async () => {
+    try {
+        await connectToMongoDB();
+
+        const records = await BorrowRecord.find()
+            .populate("userId")
+            .populate("bookId")
+            .exec(); // Execute the query
+
+        if (!records || records.length === 0) {
+            return [];
+        }
+
+        return JSON.parse(JSON.stringify(records));
+    } catch (error) {
+        console.error("Error fetching borrow records:", error);
+        throw new Error("Failed to fetch borrow records");
     }
 };

@@ -13,7 +13,7 @@ import { LinkIcon } from "lucide-react";
 import { formatCreatedAt } from "@/lib/utils";
 import { Avatar, AvatarFallback } from "../../ui/avatar";
 import DeleteUserModal from "../DeleteUserModal";
-import AdminSelect from "./AdminSelect";
+import AdminSelect from "./TableSelect";
 import UniversityIdCard from "../UniversityIdCard";
 
 const AdminTable = ({ users }: { users: IUser[] }) => {

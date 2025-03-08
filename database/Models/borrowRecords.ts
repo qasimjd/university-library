@@ -1,15 +1,20 @@
 import mongoose, { Schema, Document } from "mongoose";
+import { IUser } from "./user.model";
+import { IBook } from "./book.modle";
 
-
-const BORROW_STATUS_ENUM = ["BORROWED", "RETURNED", "OVERDUE"] as const;
+export enum BORROW_STATUS_ENUM {
+  BORROW = "borrow",
+  RETURN = "return",
+  OVERDUE = "overdue",
+}
 
 export interface IBorrowRecord extends Document {
-  userId: mongoose.Types.ObjectId;
-  bookId: mongoose.Types.ObjectId;
+  userId: mongoose.Types.ObjectId | IUser;
+  bookId: mongoose.Types.ObjectId | IBook;
   borrowDate: Date;
   dueDate: Date;
   returnDate?: Date;
-  status: (typeof BORROW_STATUS_ENUM)[number];
+  status: BORROW_STATUS_ENUM;
   createdAt: Date;
 }
 
@@ -20,7 +25,11 @@ const BorrowRecordSchema = new Schema<IBorrowRecord>(
     borrowDate: { type: Date, default: Date.now, required: true },
     dueDate: { type: Date, required: true },
     returnDate: { type: Date },
-    status: { type: String, enum: BORROW_STATUS_ENUM, default: "BORROWED", required: true },
+    status: {
+      type: String,
+      enum: Object.values(BORROW_STATUS_ENUM),
+      default: BORROW_STATUS_ENUM.BORROW,
+    },
     createdAt: { type: Date, default: Date.now },
   },
   { timestamps: true }

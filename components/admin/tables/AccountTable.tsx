@@ -11,9 +11,8 @@ import { IUser } from "@/database/Models/user.model";
 import { formatCreatedAt } from "@/lib/utils";
 import { Avatar, AvatarFallback } from "../../ui/avatar";
 import DeleteUserModal from "../DeleteUserModal";
-import AdminSelect from "./AdminSelect";
+import AdminSelect from "./TableSelect";
 import UniversityIdCard from "../UniversityIdCard";
-import StudentIDCard from "@/components/StudentIDCard";
 
 const AccountTable = ({ users }: { users: IUser[] }) => {
     return (
