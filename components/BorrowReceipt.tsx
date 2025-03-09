@@ -39,10 +39,16 @@ const BorrowReceipt = ({ receipt }: { receipt: IBorrowRecord }) => {
         pdf.save(`Borrow_Receipt_${id}.pdf`);
     };
 
+    const dueDate1 = new Date(dueDate); // Ensure dueDate is a Date object
+    const daysLeft = Math.ceil((dueDate1.getTime() - Date.now()) / (1000 * 60 * 60 * 24));
+
+
     return (
         <Dialog>
             <DialogTrigger>
-                <ReceiptText color="#669df5" size={16} />
+                {
+                    daysLeft > 0 ? <ReceiptText color="#669df5" size={16} /> : <ReceiptText color="#d60000" size={16} />
+                }
             </DialogTrigger>
             <DialogContent className="max-w-md mx-auto bg-gray-900 text-white p-6 rounded-lg shadow-lg border border-gray-700">
                 <DialogTitle className="sr-only"></DialogTitle>
@@ -77,7 +83,7 @@ const BorrowReceipt = ({ receipt }: { receipt: IBorrowRecord }) => {
                         <li><strong>Genre:</strong> {book?.genre} </li>
                         <li><strong>Borrowed On:</strong> {formatCreatedAt(borrowDate)}</li>
                         <li><strong>Due Date:</strong> {formatCreatedAt(dueDate)}</li>
-                        <li><strong>Duration:</strong> 7 Days</li>
+                        <li><strong>Duration:</strong> {daysLeft > 0 ? `${daysLeft} day${daysLeft > 1 ? 's' : ''} left to due` : ' Over Due'}</li>
                     </ul>
 
                     <hr className="my-4 border-gray-700" />

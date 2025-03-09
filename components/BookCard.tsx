@@ -28,8 +28,10 @@ const BookCard = async ({
   const isLoanedBook = hasBorrowed;
 
   const record = await BorrowedRecord({ userId, bookId });
-  if (!record) return null;
-
+  const dueDate = new Date(record.dueDate); // Ensure dueDate is a Date object
+  const daysLeft = Math.ceil((dueDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24));
+  
+  
   return (
     <li className={cn(isLoanedBook && "xs:w-44 w-full")}>
       <Link
@@ -47,14 +49,27 @@ const BookCard = async ({
       {isLoanedBook && (
         <div className="flex mt-2 gap-1 w-full">
           <div className="book-loaned text-sm w-full ">
-            <Image
-              src="/icons/calendar.svg"
-              alt="calendar"
-              width={18}
-              height={18}
-              className="object-contain"
-            />
-            <p className="text-light-100">11 days left to Due</p>
+            {daysLeft > 0 ? (
+              <Image
+                src="/icons/calendar.svg"
+                alt="calendar"
+                width={18}
+                height={18}
+                className="object-contain"
+              />
+            ) : (
+              <Image
+                src="/icons/warning.svg"
+                alt="calendar"
+                width={18}
+                height={18}
+                className="object-contain"
+              />
+            )}
+
+            <p className={cn(daysLeft > 0 ? "text-gray-100" : "text-red")}>
+              {daysLeft > 0 ? `${daysLeft} day${daysLeft > 1 ? 's' : ''} left to due` : 'Over Due'}
+            </p>
           </div>
           <div>
             <BorrowReceipt receipt={record} />
