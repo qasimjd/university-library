@@ -1,5 +1,6 @@
 "use client";
 
+
 import Image from "next/image";
 import { adminSideBarLinks } from "@/constants";
 import Link from "next/link";
@@ -14,15 +15,19 @@ const Sidebar = ({ session }: { session: Session }) => {
   return (
     <div className="admin-sidebar">
       <div>
-        <div className="logo">
-          <Image
-            src="/icons/admin/logo.svg"
-            alt="logo"
-            height={37}
-            width={37}
-          />
-          <h1>BookWise</h1>
-        </div>
+
+        {/* { Logo } */}
+        <Link href="/">
+          <div className="logo">
+            <Image
+              src="/icons/admin/logo.svg"
+              alt="logo"
+              height={37}
+              width={37}
+            />
+            <h1>BookWise</h1>
+          </div>
+        </Link>
 
         <div className="mt-10 flex flex-col text-gray-100 gap-5">
           {adminSideBarLinks.map((link) => {

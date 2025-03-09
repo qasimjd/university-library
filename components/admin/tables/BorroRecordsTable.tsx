@@ -68,7 +68,7 @@ const BorroRecordsTable = ({ borrowRecords }: BorroRecordsTableProps) => {
                                                         className="rounded-sm object-fill"
                                                     />
                                                 </div>
-                                                <div className="max-w-[280px]">
+                                                <div className="max-w-[200px]">
                                                     <p className="font-semibold text-white">{book?.title}</p>
                                                 </div>
                                             </div>

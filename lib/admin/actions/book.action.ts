@@ -5,7 +5,7 @@ import { connectToMongoDB } from "@/lib/mongodb";
 import dayjs from "dayjs";
 import { z } from "zod";
 import { bookSchema } from "@/lib/valiations";
-import BorrowRecord from "@/database/Models/borrowRecords";
+import BorrowRecord, { IBorrowRecord } from "@/database/Models/borrowRecords";
 import User, { IUser } from "@/database/Models/user.model";
 
 type CreateBookParams = z.infer<typeof bookSchema>;
@@ -127,3 +127,30 @@ export const userBorrowedBooks = async (userId: string) => {
         return { success: false, error: (error as Error).message };        
     }
  };
+
+export const BorrowedRecord = async (params: BorrowParams) => {
+    const { userId, bookId } = params;
+    try {
+        await connectToMongoDB();
+
+        const user = await User.findById(userId).lean<IUser>();
+        if (!user) return { success: false, error: "User not found in the database" };
+
+        const book = await Book.findById(bookId).lean<IBook>();
+        if (!book) return { success: false, error: "Book not found in the database" };
+
+        const borrowedRecord = await BorrowRecord.findOne({
+            userId: user._id,
+            bookId: book._id,
+        }).populate("bookId")
+        .populate("userId")
+
+        if (!borrowedRecord) return { success: false, error: "Borrow record not found" };
+
+        return JSON.parse(JSON.stringify(borrowedRecord));
+        
+    } catch (error) {
+        console.error("Error fetching borrow record:", error);
+        return { success: false, error: (error as Error).message };        
+    }
+};

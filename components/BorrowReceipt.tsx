@@ -42,10 +42,7 @@ const BorrowReceipt = ({ receipt }: { receipt: IBorrowRecord }) => {
     return (
         <Dialog>
             <DialogTrigger>
-                <div className="flex items-center gap-2 text-blue-400 bg-gray-800 rounded-lg py-1 px-2 hover:text-blue-300">
-                    <ReceiptText color="#669df5" size={16} />
-                    <span>Generate</span>
-                </div>
+                <ReceiptText color="#669df5" size={16} />
             </DialogTrigger>
             <DialogContent className="max-w-md mx-auto bg-gray-900 text-white p-6 rounded-lg shadow-lg border border-gray-700">
                 <DialogTitle className="sr-only"></DialogTitle>
@@ -75,9 +72,9 @@ const BorrowReceipt = ({ receipt }: { receipt: IBorrowRecord }) => {
 
                     <h3 className="font-semibold">Book Details:</h3>
                     <ul className="mt-2 text-sm space-y-1">
-                        <li><strong>Title:</strong> {book.title} </li>
-                        <li><strong>Author:</strong> {book.author} </li>
-                        <li><strong>Genre:</strong> {book.genre} </li>
+                        <li><strong>Title:</strong> {book?.title} </li>
+                        <li><strong>Author:</strong> {book?.author} </li>
+                        <li><strong>Genre:</strong> {book?.genre} </li>
                         <li><strong>Borrowed On:</strong> {formatCreatedAt(borrowDate)}</li>
                         <li><strong>Due Date:</strong> {formatCreatedAt(dueDate)}</li>
                         <li><strong>Duration:</strong> 7 Days</li>

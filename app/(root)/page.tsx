@@ -13,12 +13,14 @@ const Home = async () => {
 
   return (
     <>
-      {books && books.length > 0 && <BookOverview {...books[0]} />}
+      {books && books.length > 0 && (
+        <BookOverview {...books[Math.floor(Math.random() * books.length)]} />
+      )}
 
       {books && books.length > 2 && (
         <BookList
           title="Latest Books"
-          books={books.slice(1)}
+          books={books}
           containerClassName="mt-28"
         />
       )}
