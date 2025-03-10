@@ -1,13 +1,14 @@
 import React from "react";
 import Link from "next/link";
 import BookCover from "@/components/BookCover";
-import { cn } from "@/lib/utils";
+import { cn, formatCreatedAt, formatDayMonth } from "@/lib/utils";
 import Image from "next/image";
 import { IBook } from "@/database/Models/book.modle";
 import { auth } from "@/auth";
 import User from "@/database/Models/user.model";
 import BorrowReceipt from "./BorrowReceipt";
 import { BorrowedRecord } from "@/lib/admin/actions/book.action";
+import { BORROW_STATUS_ENUM, IBorrowRecord } from "@/database/Models/borrowRecords";
 
 const BookCard = async ({
   _id,
@@ -30,8 +31,9 @@ const BookCard = async ({
   const record = await BorrowedRecord({ userId, bookId });
   const dueDate = new Date(record.dueDate); // Ensure dueDate is a Date object
   const daysLeft = Math.ceil((dueDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24));
-  
-  
+
+  const { borrowDate, status, returnDate } = record as IBorrowRecord;
+
   return (
     <li className={cn(isLoanedBook && "xs:w-44 w-full")}>
       <Link
@@ -47,32 +49,51 @@ const BookCard = async ({
       </Link>
 
       {isLoanedBook && (
-        <div className="flex mt-2 gap-1 w-full">
-          <div className="book-loaned text-sm w-full ">
-            {daysLeft > 0 ? (
-              <Image
-                src="/icons/calendar.svg"
-                alt="calendar"
-                width={18}
-                height={18}
-                className="object-contain"
-              />
-            ) : (
-              <Image
-                src="/icons/warning.svg"
-                alt="calendar"
-                width={18}
-                height={18}
-                className="object-contain"
-              />
-            )}
-
-            <p className={cn(daysLeft > 0 ? "text-gray-100" : "text-red")}>
-              {daysLeft > 0 ? `${daysLeft} day${daysLeft > 1 ? 's' : ''} left to due` : 'Over Due'}
-            </p>
+        <div className="flex text-sm flex-col mt-2 gap-1 w-full">
+          <div className="book-loaned flx gap-1 items-center">
+            <Image
+              src="/icons/book-2.svg"
+              alt="user"
+              width={18}
+              height={18}
+              className="object-contain"
+            />
+            <p className="text-gray-400">Borrowed on {formatDayMonth(borrowDate)}</p>
           </div>
-          <div>
+          <div className="book-loaned text-sm w-full flex justify-between mt-1 gap-1">
+            <div className="flex gap-1 items-center">
+              {status === BORROW_STATUS_ENUM.BORROW ? (
+                <Image
+                  src="/icons/calendar.svg"
+                  alt="calendar"
+                  width={18}
+                  height={18}
+                  className="object-contain"
+                />
+              ) : status === BORROW_STATUS_ENUM.OVERDUE ? (
+                <Image
+                  src="/icons/warning.svg"
+                  alt="calendar"
+                  width={18}
+                  height={18}
+                  className="object-contain"
+                />
+              ) :
+                <Image
+                  src="/icons/tick.svg"
+                  alt="calendar"
+                  width={18}
+                  height={18}
+                  className="object-contain"
+                />
+              }
+              <p className={cn(daysLeft > 0 ? "text-gray-100" : "text-red")}>
+                {status === BORROW_STATUS_ENUM.BORROW && daysLeft > 0 ? `${daysLeft} day${daysLeft > 1 ? 's' : ''} left to due` : status === BORROW_STATUS_ENUM.OVERDUE ? 'Over Due' : returnDate ? `Returned on ${formatDayMonth(returnDate)}` : ''}
+              </p>
+            </div>
+            {(status === BORROW_STATUS_ENUM.OVERDUE || status === BORROW_STATUS_ENUM.BORROW) && (
             <BorrowReceipt receipt={record} />
+          )}
           </div>
 
         </div>

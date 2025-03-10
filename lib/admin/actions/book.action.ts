@@ -5,8 +5,9 @@ import { connectToMongoDB } from "@/lib/mongodb";
 import dayjs from "dayjs";
 import { z } from "zod";
 import { bookSchema } from "@/lib/valiations";
-import BorrowRecord, { IBorrowRecord } from "@/database/Models/borrowRecords";
+import BorrowRecord, { BORROW_STATUS_ENUM, IBorrowRecord } from "@/database/Models/borrowRecords";
 import User, { IUser } from "@/database/Models/user.model";
+import { revalidatePath } from "next/cache";
 
 type CreateBookParams = z.infer<typeof bookSchema>;
 type BorrowParams = {
@@ -91,10 +92,9 @@ export const borrowBook = async (params: BorrowParams) => {
             $addToSet: { borrowBooksIds: book._id },
         }, { new: true });
 
-        book.availableCopies -= 1;
-
         await borrowRecord.save();
         await Book.findByIdAndUpdate(bookId, { $inc: { availableCopies: -1 } });
+        revalidatePath(`/books/${bookId}`);
         return {
             success: true,
             data: JSON.parse(JSON.stringify(borrowRecord)),
@@ -152,5 +152,32 @@ export const BorrowedRecord = async (params: BorrowParams) => {
     } catch (error) {
         console.error("Error fetching borrow record:", error);
         return { success: false, error: (error as Error).message };        
+    }
+};
+
+export const getBorrowedRecord = async (userId: string, bookId: string) => {
+    try {
+        await connectToMongoDB();
+
+        const borrowedRecord = await BorrowRecord.findOne({
+            userId,
+            bookId,
+        }).select("status")
+
+        if (!borrowedRecord) return { success: false, error: "Borrow record not found" };
+
+        if (borrowedRecord.status === BORROW_STATUS_ENUM.RETURN) {
+            return { success: true, data: borrowedRecord };
+        }
+
+        if (borrowedRecord.status === BORROW_STATUS_ENUM.OVERDUE || borrowedRecord.status === BORROW_STATUS_ENUM.BORROW) {
+            return { success: false, error: "Book already returned" };
+        }
+
+        return  { success: true, data: borrowedRecord };
+        
+    } catch (error) {
+        console.error("Error fetching borrowed record:", error);
+        return { success: false, error: (error as Error).message };
     }
 };

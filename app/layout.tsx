@@ -39,7 +39,7 @@ const RootLayout = async ({ children }: { children: ReactNode }) => {
     <html lang="en">
       <SessionProvider session={session}>
         <body
-          className={`${ibmPlexSans.className} ${bebasNeue.variable} antialiased`}
+          className={`${ibmPlexSans.className} ${bebasNeue.variable} antialiased bg-black`}
         >
           {children}
 

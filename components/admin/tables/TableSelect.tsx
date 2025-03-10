@@ -62,12 +62,12 @@ const AdminSelect = ({ selectOption, userId, type }: Props) => {
                     </div>
                 </SelectItem>
                 <SelectItem value={type === "userRole" ? "admin" : type === "userStatus" ? "approve" : "return"} className="confirm-approve">
-                    <div className={`flex items-center cursor-pointer justify-between px-3 py-1 w-20 rounded-full ${type === "borrowStatus" ? "bg-blue-200 text-blue-700 font-medium": "bg-green-100 text-green-700 font-medium"}`}>
+                    <div className="flex items-center cursor-pointer justify-between px-3 py-1 w-20 rounded-full bg-green-100 text-green-700 font-medium">
                         {type === "userRole" ? "Admin" : type === "userStatus" ? "Approve" : "Returned"}                    </div>
                 </SelectItem>
                 {(type === "userStatus" || type === "borrowStatus") && (
                     <SelectItem value={type === "userStatus" ? "pending" : "overdue"} className="confirm-approve">
-                        <div className={`flex items-center cursor-pointer justify-between px-3 py-1 w-20 rounded-full ${type === "userStatus" ? "bg-orange-100 text-orange-600" : "bg-red-100 text-red-600"} font-medium`}>
+                        <div className={`flex items-center cursor-pointer justify-between px-3 py-1 w-20 rounded-full ${type === "userStatus" ? "bg-orange-100 text-orange-600" : "bg-red-600 text-white"} font-medium`}>
                             {type === "userStatus" ? "Pending" : "Overdue"}
                         </div>
                     </SelectItem>

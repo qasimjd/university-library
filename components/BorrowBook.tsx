@@ -6,10 +6,12 @@ import { borrowBook } from '@/lib/admin/actions/book.action'
 import { toast } from 'sonner'
 import { useState } from 'react';
 import { LoaderCircle } from 'lucide-react';
+import BorrowRecord from '@/database/Models/borrowRecords';
 
 const BorrowBook = ({ userId, bookId, hasBorrowed }: { userId: string, bookId: string, hasBorrowed: boolean }) => {
     const [borrowing, setBorrowing] = useState(false)
     const [borrowed, setBorrowed] = useState(hasBorrowed)
+
 
     const handleBorroBook = async () => {
         try {

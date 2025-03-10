@@ -23,11 +23,15 @@ const Page = async () => {
   if (!userProfile) return null;
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+    <main className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <section>
         <StudentIDCard userProfile={userProfile} />
+      </section>
 
-        {books && (<BookList title="Borrowed Books" books={books} containerClassName="mx-auto"/>)}
-    </div>
+      <section>
+        {books && books.length > 0 ? <BookList title="Borrowed Books" books={books} containerClassName="mx-auto" /> : <h1 className="text-center text-gray-100">No borrowed books</h1>}
+      </section>
+    </main>
   );
 };
 export default Page;

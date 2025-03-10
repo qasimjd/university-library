@@ -18,7 +18,7 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 
 const BorrowReceipt = ({ receipt }: { receipt: IBorrowRecord }) => {
-    const { bookId, userId, borrowDate, dueDate, _id } = receipt;
+    const { bookId, userId, borrowDate, dueDate, _id, status } = receipt;
     const id = _id as string;
     const book = bookId as IBook;
     const user = userId as IUser;
@@ -47,7 +47,7 @@ const BorrowReceipt = ({ receipt }: { receipt: IBorrowRecord }) => {
         <Dialog>
             <DialogTrigger>
                 {
-                    daysLeft > 0 ? <ReceiptText color="#669df5" size={16} /> : <ReceiptText color="#d60000" size={16} />
+                    status === "overdue" ? <ReceiptText color="#d60000" size={16} /> : <ReceiptText color="#669df5" size={16} />
                 }
             </DialogTrigger>
             <DialogContent className="max-w-md mx-auto bg-gray-900 text-white p-6 rounded-lg shadow-lg border border-gray-700">

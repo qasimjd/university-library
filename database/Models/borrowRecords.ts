@@ -16,6 +16,7 @@ export interface IBorrowRecord extends Document {
   returnDate?: Date;
   status: BORROW_STATUS_ENUM;
   createdAt: Date;
+  updatedAt: Date;
 }
 
 const BorrowRecordSchema = new Schema<IBorrowRecord>(
@@ -30,7 +31,6 @@ const BorrowRecordSchema = new Schema<IBorrowRecord>(
       enum: Object.values(BORROW_STATUS_ENUM),
       default: BORROW_STATUS_ENUM.BORROW,
     },
-    createdAt: { type: Date, default: Date.now },
   },
   { timestamps: true }
 );

@@ -12,3 +12,9 @@ export function formatCreatedAt(date: string | Date): string {
 }
 
 
+export function formatDayMonth(date: string | Date): string {
+  const parsedDate = typeof date === "string" ? new Date(date) : date;
+  return format(parsedDate, "d MMM");
+}
+
+

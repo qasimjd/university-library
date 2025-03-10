@@ -75,19 +75,35 @@ export const toggleStatus = async (userId: string, currentUserStatus: UserStatus
 
 export const toggleRecord = async (recordId: string, currentUserStatus: BORROW_STATUS_ENUM) => {
     try {
-        connectToMongoDB();
-        const recorde = await BorrowRecord.findById(recordId).select("status");
-        if (!recorde) {
-            return { success: false, message: "recorde not found" };
+        await connectToMongoDB();
+        const record = await BorrowRecord.findById(recordId).select("status").populate("bookId");
+        if (!record) {
+            return { success: false, message: "Record not found" };
+        }
+        const book1 = record.bookId._id;
+
+        record.status = currentUserStatus;
+
+        const book = await Book.findById(record.bookId);
+        if (!book) {
+            return { success: false, message: "Book not found" };
         }
 
-        recorde.status = currentUserStatus;
-        await recorde.save();
-        // revalidatePath("/admin/users");
-        return { success: true, message: "recorde status updated successfully" };
+        if (currentUserStatus === BORROW_STATUS_ENUM.RETURN) {
+            book.availableCopies += 1;
+            record.returnDate = new Date();
+        }
+
+        if (currentUserStatus === BORROW_STATUS_ENUM.BORROW) book.availableCopies -= 1;
+
+        await book.save();
+
+        await record.save();
+        // revalidatePath(`/books/${book1}`);
+        return { success: true, message: "Record status updated successfully" };
     } catch (error) {
         console.log(error);
-        return { success: false, message: "Failed to update recorde status" };
+        return { success: false, message: "Failed to update record status" };
     }
 }
 

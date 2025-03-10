@@ -25,7 +25,7 @@ const StudentIDCard = ({userProfile}: {userProfile: IUser}) => {
           <div className="flex items-center gap-2">
             <p className="text-gray-400 text-sm">Status: {status.toUpperCase()}</p>
             <span
-              className={`w-3 h-3 rounded-full animate-pulse ease-in-out ${status.toLowerCase() === "approve"
+              className={`w-3 h-3 rounded-full animate-bounce ease-in-out ${status.toLowerCase() === "approve"
                   ? "bg-green-500"
                   : status.toLowerCase() === "reject"
                     ? "bg-red-700"
