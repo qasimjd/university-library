@@ -76,29 +76,43 @@ export const toggleStatus = async (userId: string, currentUserStatus: UserStatus
 export const toggleRecord = async (recordId: string, currentUserStatus: BORROW_STATUS_ENUM) => {
     try {
         await connectToMongoDB();
-        const record = await BorrowRecord.findById(recordId).select("status").populate("bookId");
-        if (!record) {
-            return { success: false, message: "Record not found" };
-        }
-        const book1 = record.bookId._id;
 
-        record.status = currentUserStatus;
+        const record = await BorrowRecord.findById(recordId).select("bookId").select("userId");
+        if (!record) {
+            return { success: false, message: "Borrow record not found" };
+        }
 
         const book = await Book.findById(record.bookId);
         if (!book) {
             return { success: false, message: "Book not found" };
         }
 
+        const user = await User.findById(record.userId);
+        if (!user) {
+            return { success: false, message: "User not found" };
+        }
+
         if (currentUserStatus === BORROW_STATUS_ENUM.RETURN) {
             book.availableCopies += 1;
             record.returnDate = new Date();
+            // user.borrowBooksIds = user.borrowBooksIds.filter((id) => id.toString() !== book._id.toString());
+            record.status = BORROW_STATUS_ENUM.RETURN;
         }
 
-        if (currentUserStatus === BORROW_STATUS_ENUM.BORROW) book.availableCopies -= 1;
+        if (currentUserStatus === BORROW_STATUS_ENUM.BORROW) {
+            if (book.availableCopies <= 0) {
+                return { success: false, message: "No available copies" };
+            }
+            book.availableCopies -= 1;
+            record.borrowDate = new Date();
+            record.status = BORROW_STATUS_ENUM.BORROW;
+        }
 
-        await book.save();
+        if (currentUserStatus === BORROW_STATUS_ENUM.OVERDUE) {
+            record.status = BORROW_STATUS_ENUM.OVERDUE;
+        }
 
-        await record.save();
+        await Promise.all([book.save(), record.save(), user.save()]);
         // revalidatePath(`/books/${book1}`);
         return { success: true, message: "Record status updated successfully" };
     } catch (error) {

@@ -12,9 +12,9 @@ const fetchBooks = async () => {
 
 const BookCard = ({coverColor, coverUrl }: IBook) => {
   return (
-    <li className="xs:w-44 w-full">
+    <div className="xs:w-44 w-full">
         <BookCover coverColor={coverColor} coverUrl={coverUrl} />
-    </li>
+    </div>
   );
 };
 
@@ -25,17 +25,17 @@ export async function MarqueeDemoVertical() {
 
   return (
     <div className="relative flex w-full max-h-40 sm:max-h-screen flex-row items-center justify-center overflow-hidden brightness-50">
-      <Marquee pauseOnHover vertical className="[--duration:60s]">
+      <Marquee pauseOnHover vertical className="[--duration:90s]">
         {firstRow.map((book) => (
           <BookCard key={book._id.toString()} {...book} />
         ))}
       </Marquee>
-      <Marquee reverse pauseOnHover vertical className="[--duration:60s]">
+      <Marquee reverse pauseOnHover vertical className="[--duration:90s]">
         {secondRow.map((book) => (
           <BookCard key={book._id.toString()} {...book} />
         ))}
       </Marquee>
-      <Marquee pauseOnHover vertical className="[--duration:60s]">
+      <Marquee pauseOnHover vertical className="[--duration:90s]">
         {secondRow.map((book) => (
           <BookCard key={book._id.toString()} {...book} />
         ))}

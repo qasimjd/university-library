@@ -31,7 +31,7 @@ const AdminSelect = ({ selectOption, userId, type }: Props) => {
         if (res.success) {
             toast.success(res.message)
         } else {
-            toast.error(res.success)
+            toast.error(res.message)
         }
     }
 
@@ -40,7 +40,7 @@ const AdminSelect = ({ selectOption, userId, type }: Props) => {
         if (res.success) {
             toast.success(res.message)
         } else {
-            toast.error(res.success)
+            toast.error(res.message)
         }
     }
 

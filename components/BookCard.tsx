@@ -25,14 +25,15 @@ const BookCard = async ({
 
   const bookId = _id.toString();
 
-  const hasBorrowed = user?.borrowBooksIds?.some((id) => id.toString() === _id.toString());
-  const isLoanedBook = hasBorrowed;
-
   const record = await BorrowedRecord({ userId, bookId });
+  const { borrowDate, status, returnDate } = record as IBorrowRecord;
+
   const dueDate = new Date(record.dueDate); // Ensure dueDate is a Date object
   const daysLeft = Math.ceil((dueDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24));
 
-  const { borrowDate, status, returnDate } = record as IBorrowRecord;
+  const hasBorrowed = user?.borrowBooksIds?.some((id) => id.toString() === _id.toString());
+  const isLoanedBook = hasBorrowed;
+
 
   return (
     <li className={cn(isLoanedBook && "xs:w-44 w-full")}>
@@ -92,8 +93,8 @@ const BookCard = async ({
               </p>
             </div>
             {(status === BORROW_STATUS_ENUM.OVERDUE || status === BORROW_STATUS_ENUM.BORROW) && (
-            <BorrowReceipt receipt={record} />
-          )}
+              <BorrowReceipt receipt={record} />
+            )}
           </div>
 
         </div>

@@ -8,8 +8,8 @@ export async function connectToMongoDB() {
     return cachedConnection;
   }
   try {
-    const cnx = await mongoose.connect(process.env.MONGODB_URI!);
-    cachedConnection = cnx.connection;
+    const mongooseInstance = await mongoose.connect(process.env.MONGODB_URI!);
+    cachedConnection = mongooseInstance.connection;
     console.log("New mongodb connection established");
     return cachedConnection;
   } catch (error) {

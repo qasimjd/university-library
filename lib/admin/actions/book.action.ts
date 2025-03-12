@@ -58,21 +58,21 @@ export const borrowBook = async (params: BorrowParams) => {
         await connectToMongoDB();
 
         const book = await Book.findById(bookId).lean<IBook>();
-        if (!book) return { success: false, error: "Book not found" };
+        if (!book) throw new Error("Book not found");
 
         const user = await User.findById(userId).select("status borrowBooksIds");
-        if (!user) return { success: false, error: "User not found in the database" };
+        if (!user) throw new Error("User not found in the database");
 
         if (user.status !== "approve") {
-            return { success: false, error: "You dont borrow this book until your account was approved" };
+            return { success: false, error: "Your account is not approved to borrow books" };
         }
 
-        const isBookAlreadyBorrowed = Array.isArray(user.borrowBooksIds) &&
-        user.borrowBooksIds.some(
-            (borrowedBookId) => borrowedBookId.toString() === book._id.toString()
-        );
-            if (isBookAlreadyBorrowed) {
-            return { success: false, error: "You have already borrowed this book" };
+        const isBookAlreadyBorrowed = user.borrowBooksIds?.length > 0 &&
+            user.borrowBooksIds.some(
+                (borrowedBookId) => borrowedBookId.toString() === book._id.toString()
+            );
+        if (isBookAlreadyBorrowed) {
+            return { success: false, error: "You have already borrowed this book and cannot borrow it again until it is returned" };
         }
 
         if (!book.availableCopies || book.availableCopies <= 0) {
@@ -82,7 +82,6 @@ export const borrowBook = async (params: BorrowParams) => {
         const dueDate = dayjs().add(7, "days").toDate();
 
         const borrowRecord = new BorrowRecord({
-            ...params,
             bookId,
             userId,
             dueDate,
@@ -94,7 +93,7 @@ export const borrowBook = async (params: BorrowParams) => {
 
         await borrowRecord.save();
         await Book.findByIdAndUpdate(bookId, { $inc: { availableCopies: -1 } });
-        revalidatePath(`/books/${bookId}`);
+
         return {
             success: true,
             data: JSON.parse(JSON.stringify(borrowRecord)),
@@ -110,23 +109,20 @@ export const userBorrowedBooks = async (userId: string) => {
     try {
         await connectToMongoDB();
 
-        const user = await User.findById(userId).lean<IUser>();
-        if (!user) return { success: false, error: "User not found in the database" };
+        const borrowRecords = await BorrowRecord.find({ userId }).populate("bookId");
+        if (!borrowRecords) return { success: false, error: "Borrow records not found" };
 
-        const borrowedBooks = await Book.find({
-            _id: { $in: user.borrowBooksIds },
-        }).lean<IBook[]>();
+        const borrowedBooks = borrowRecords.map(record => record.bookId);
 
         return {
             success: true,
-            data: borrowedBooks,
+            data: JSON.parse(JSON.stringify(borrowedBooks)),
         };
-        
     } catch (error) {
         console.error("Error fetching user borrowed books:", error);
-        return { success: false, error: (error as Error).message };        
+        return { success: false, error: (error as Error).message };
     }
- };
+};
 
 export const BorrowedRecord = async (params: BorrowParams) => {
     const { userId, bookId } = params;
@@ -144,6 +140,7 @@ export const BorrowedRecord = async (params: BorrowParams) => {
             bookId: book._id,
         }).populate("bookId")
         .populate("userId")
+        .select("borrowDate dueDate returnDate status");
 
         if (!borrowedRecord) return { success: false, error: "Borrow record not found" };
 
@@ -152,32 +149,5 @@ export const BorrowedRecord = async (params: BorrowParams) => {
     } catch (error) {
         console.error("Error fetching borrow record:", error);
         return { success: false, error: (error as Error).message };        
-    }
-};
-
-export const getBorrowedRecord = async (userId: string, bookId: string) => {
-    try {
-        await connectToMongoDB();
-
-        const borrowedRecord = await BorrowRecord.findOne({
-            userId,
-            bookId,
-        }).select("status")
-
-        if (!borrowedRecord) return { success: false, error: "Borrow record not found" };
-
-        if (borrowedRecord.status === BORROW_STATUS_ENUM.RETURN) {
-            return { success: true, data: borrowedRecord };
-        }
-
-        if (borrowedRecord.status === BORROW_STATUS_ENUM.OVERDUE || borrowedRecord.status === BORROW_STATUS_ENUM.BORROW) {
-            return { success: false, error: "Book already returned" };
-        }
-
-        return  { success: true, data: borrowedRecord };
-        
-    } catch (error) {
-        console.error("Error fetching borrowed record:", error);
-        return { success: false, error: (error as Error).message };
     }
 };

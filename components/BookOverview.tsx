@@ -5,8 +5,6 @@ import { IBook } from '@/database/Models/book.modle'
 import BorrowBook from './BorrowBook'
 import { auth } from '@/auth'
 import User from '@/database/Models/user.model'
-import BorrowRecord from '@/database/Models/borrowRecords'
-import { getBorrowedRecord } from '@/lib/admin/actions/book.action'
 
 const BookOverview = async ({
     title,
@@ -28,9 +26,6 @@ const BookOverview = async ({
     
     const user = await User.findOne({ _id: userId });
     const bookId = _id.toString()
-
-    // const record = await getBorrowedRecord(userId, bookId);
-    // const hasBorrowed = record.success ? false : true;
 
     const hasBorrowed = user?.borrowBooksIds?.some((id) => id.toString() === _id.toString());
 

@@ -10,11 +10,14 @@ const Home = async () => {
   }
 
   const books = result.data;
+  if (!books) return null;
+
+  const index = Math.floor(Math.random() * books.length)
 
   return (
     <>
       {books && books.length > 0 && (
-        <BookOverview {...books[Math.floor(Math.random() * books.length)]} />
+        <BookOverview {...books[index]} />
       )}
 
       {books && books.length > 2 && (

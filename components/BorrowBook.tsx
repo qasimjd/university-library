@@ -5,8 +5,7 @@ import { Button } from './ui/button'
 import { borrowBook } from '@/lib/admin/actions/book.action'
 import { toast } from 'sonner'
 import { useState } from 'react';
-import { LoaderCircle } from 'lucide-react';
-import BorrowRecord from '@/database/Models/borrowRecords';
+import { CircleCheck, LoaderCircle } from 'lucide-react';
 
 const BorrowBook = ({ userId, bookId, hasBorrowed }: { userId: string, bookId: string, hasBorrowed: boolean }) => {
     const [borrowing, setBorrowing] = useState(false)
@@ -22,7 +21,6 @@ const BorrowBook = ({ userId, bookId, hasBorrowed }: { userId: string, bookId: s
                 toast.success('Book borrowed successfully')
             } else {
                 toast.error(result.error)
-                setBorrowed(false)
             }
         } catch (error) {
             console.log(error)
@@ -34,9 +32,9 @@ const BorrowBook = ({ userId, bookId, hasBorrowed }: { userId: string, bookId: s
 
     return (
         <Button className='book-overview_btn' onClick={handleBorroBook} disabled={borrowing || borrowed}>
-            <Image src="/icons/book.svg" alt="star" width={20} height={20} />
+            {borrowed ? <CircleCheck /> : <Image src="/icons/book.svg" alt="star" width={20} height={20} />}
             <p className='font-bebas-neue text-xl text-dark-100'>
-                {borrowed ? "Borrowed" : borrowing ? <LoaderCircle className='animate-spin' size={18} /> : "Borrow"}
+                {borrowed ? "Borrowed" : borrowing ? <LoaderCircle className='animate-spin' size={18} /> : "Request to Borrow"}
             </p>
         </Button>
     )
