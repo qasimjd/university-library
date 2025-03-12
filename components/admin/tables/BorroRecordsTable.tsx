@@ -10,12 +10,12 @@ import {
 import { formatCreatedAt } from "@/lib/utils";
 import { IBorrowRecord } from "@/database/Models/borrowRecords";
 import Link from "next/link";
-import ClientImage from "../ClientImage";
 import { IUser } from "@/database/Models/user.model";
 import { IBook } from "@/database/Models/book.modle";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import AdminSelect from "./TableSelect";
 import BorrowReceipt from "@/components/BorrowReceipt";
+import BookCover from "@/components/BookCover";
 
 interface BorroRecordsTableProps {
     borrowRecords: IBorrowRecord[];
@@ -28,7 +28,7 @@ const BorroRecordsTable = ({ borrowRecords }: BorroRecordsTableProps) => {
 
     return (
         <div className="m-2 p-4 bg-gray-900 border border-gray-700 rounded-lg shadow-lg flex flex-col gap-4">
-            <div className="overflow-y-auto max-h-[calc(100vh-200px)]">
+            <div className="overflow-y-auto max-h-[calc(100vh-325px)]">
                 <Table className="border-collapse w-full">
                     <TableCaption className="text-gray-400">
                         A list of requested users.
@@ -39,7 +39,7 @@ const BorroRecordsTable = ({ borrowRecords }: BorroRecordsTableProps) => {
                         <TableRow className="hover:bg-gray-900 border-none">
                             <TableHead className="text-gray-300">Book</TableHead>
                             <TableHead className="text-gray-300">User Requested</TableHead>
-                            <TableHead className="text-gray-300 text-center">Borrow Data</TableHead>
+                            <TableHead className="text-gray-300">Borrow Data</TableHead>
                             <TableHead className="text-gray-300 text-center">Borrowed Date</TableHead>
                             {/* <TableHead className="text-gray-300 text-center">Return Date</TableHead> */}
                             <TableHead className="text-gray-300 text-center">Due Date</TableHead>
@@ -61,13 +61,9 @@ const BorroRecordsTable = ({ borrowRecords }: BorroRecordsTableProps) => {
                                     <TableCell className="border-none">
                                         <Link href={`/books/${book?._id}`} passHref>
                                             <div className="flex items-center gap-3 my-1">
-                                                <div className="w-8 h-11 relative">
-                                                    <ClientImage
-                                                        path={book?.coverUrl}
-                                                        alt={book?.title || "Book cover"}
-                                                        className="rounded-sm object-fill"
-                                                    />
-                                                </div>
+                                                
+                                                <BookCover coverColor={book.coverColor} coverUrl={book.coverUrl} className="h-11 w-8" />
+
                                                 <div className="max-w-[200px]">
                                                     <p className="font-semibold text-white">{book?.title}</p>
                                                 </div>
@@ -95,7 +91,7 @@ const BorroRecordsTable = ({ borrowRecords }: BorroRecordsTableProps) => {
                                     </TableCell>
 
                                     {/* Borrowed Data */}
-                                    <TableCell className="border-none text-center">
+                                    <TableCell className="border-none">
                                         <AdminSelect type="borrowStatus" selectOption={record.status} userId={record._id as string} />
                                     </TableCell>
 
@@ -110,8 +106,8 @@ const BorroRecordsTable = ({ borrowRecords }: BorroRecordsTableProps) => {
                                     </TableCell> */}
 
                                     {/* Due Date */}
-                                    <TableCell className="border-none text-center">                                       
-                                            {formatCreatedAt(record.dueDate)}
+                                    <TableCell className="border-none text-center">
+                                        {formatCreatedAt(record.dueDate)}
                                     </TableCell>
 
                                     {/* Receipt */}

@@ -3,6 +3,7 @@
 import { auth } from "@/auth";
 import Book from "@/database/Models/book.modle";
 import BorrowRecord, { BORROW_STATUS_ENUM } from "@/database/Models/borrowRecords";
+import Stats, { IStats } from "@/database/Models/stats.modle";
 import User, { IUser, UserRole, UserStatus } from "@/database/Models/user.model";
 import { connectToMongoDB } from "@/lib/mongodb";
 import { revalidatePath } from "next/cache";
@@ -139,7 +140,7 @@ export const deleteBookModle = async (bookId: string) => {
 export const getRequestedUsers = async () => {
     try {
         connectToMongoDB();
-        const users = await User.find()
+        const users = await User.find().sort({ createdAt: -1 })
         if (!users) {
             return null;
         }
@@ -159,9 +160,10 @@ export const getborrowRecords = async () => {
         await connectToMongoDB();
 
         const records = await BorrowRecord.find()
+            .sort({ borrowDate: -1 }) // Sort by borrowDate in descending order
             .populate("userId")
             .populate("bookId")
-            .exec(); // Execute the query
+            .exec();
 
         if (!records || records.length === 0) {
             return [];
@@ -173,3 +175,13 @@ export const getborrowRecords = async () => {
         throw new Error("Failed to fetch borrow records");
     }
 };
+
+export async function getPreviousStats(): Promise<IStats | null> {
+    await connectToMongoDB();
+    return Stats.findOne().sort({ date: -1 });
+}
+
+export async function saveCurrentStats(data: Omit<IStats, "date">): Promise<void> {
+    await connectToMongoDB();
+    await Stats.create({ ...data, date: new Date() });
+}

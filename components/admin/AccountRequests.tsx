@@ -1,28 +1,24 @@
 import React from "react";
 import { Card } from "@/components/ui/card";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { IUser } from "@/database/Models/user.model";
+import { Avatar, AvatarFallback } from "../ui/avatar";
 
-const AccountRequests = () => {
-  const users = [
-    { id: 1, name: "Marc Atenson", email: "marcnine@gmail.com", avatar: "/avatars/user1.jpg" },
-    { id: 2, name: "Susan Drake", email: "contact@susandrake.com", avatar: "/avatars/user2.jpg" },
-    { id: 3, name: "Ronald Richards", email: "ronaldrichard@gmail.com", avatar: "/avatars/user3.jpg" },
-    { id: 4, name: "Jane Cooper", email: "janecooper@protonmail.com", avatar: "/avatars/user4.jpg" },
-    { id: 5, name: "Ian Warren", email: "wadewarren@mail.com", avatar: "/avatars/user5.jpg" },
-    { id: 6, name: "Darrell Steward", email: "darrellsteward@gmail.com", avatar: "/avatars/user6.jpg" },
-  ];
+const AccountRequests = ({ users }: { users: IUser[] }) => {
 
   return (
-    <Card className="p-4 bg-gray-900 text-gray-100 border-none">
-      <div className="grid grid-cols-2 gap-4">
+    <Card className="bg-gray-900 text-gray-100 border-none">
+      <div className="grid grid-cols-3 gap-3">
         {users.map((user) => (
-          <div key={user.id} className="flex items-center gap-4 p-2 border rounded-md">
-            <Image src={user.avatar} alt={user.name} width={40} height={40} className="rounded-full" />
-            <div className="flex-1">
-              <p className="font-medium text-gray-900 dark:text-white">{user.name}</p>
+          <div key={user._id as string} className="flex flex-col items-center gap-2 p-2 border-none bg-gray-800 rounded-md">
+            <Avatar>
+              <AvatarFallback className="bg-fuchsia-700 text-white">
+                {user.fullName.split(" ").map((n) => n.charAt(0)).join("").substring(0, 2) || "U"}
+              </AvatarFallback>
+            </Avatar>
+            <div className="flex-1 flex justify-center items-center flex-col">
+              <p className="font-medium text-white">{user.fullName}</p>
               <p className="text-sm text-gray-500">{user.email}</p>
-            <Button variant="ghost">✔</Button>
             </div>
           </div>
         ))}

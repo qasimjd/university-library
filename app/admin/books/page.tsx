@@ -8,7 +8,6 @@ const Page = async () => {
 
   const res = await getBooks();
   const allBooks = res.data;
-  console.log(allBooks);
   if (!allBooks) return [];
 
   return (

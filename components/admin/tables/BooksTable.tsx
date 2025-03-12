@@ -17,7 +17,7 @@ import { DeleteBookDialog } from "../DeleteUserModal";
 const AdminTable = ({ allBooks }: { allBooks: IBook[] }) => {
     return (
         <div className="m-2 p-4 bg-gray-900 border border-gray-700 rounded-lg shadow-lg flex flex-col gap-4">
-            <div className="overflow-y-auto max-h-[calc(100vh-200px)]">
+            <div className="overflow-y-auto max-h-[calc(100vh-325px)]">
                 <Table className="border-collapse w-full">
                     <TableCaption className="text-gray-400">
                         A list of all registered users.

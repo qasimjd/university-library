@@ -151,3 +151,27 @@ export const BorrowedRecord = async (params: BorrowParams) => {
         return { success: false, error: (error as Error).message };        
     }
 };
+
+export const getSimmilarBooks = async (bookId: string) => {
+    try {
+        await connectToMongoDB();
+
+        const book = await Book.findById(bookId).lean<IBook>();
+        if (!book) return { success: false, error: "Book not found" };
+
+        const books = await Book.find({
+            $or: [
+                { genre: book.genre },
+            ],
+            _id: { $ne: book._id },
+        }).limit(5).lean<IBook[]>();
+
+        return {
+            success: true,
+            data: books,
+        };
+    } catch (error) {
+        console.error("Error fetching similar books:", error);
+        return { success: false, error: (error as Error).message };
+    }
+}
