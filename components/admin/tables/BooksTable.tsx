@@ -12,19 +12,19 @@ import { formatCreatedAt } from "@/lib/utils";
 import ClientImage from "../ClientImage";
 import Link from "next/link";
 import { DeleteBookDialog } from "../DeleteUserModal";
+import BookCover from "@/components/BookCover";
 
 
 const AdminTable = ({ allBooks }: { allBooks: IBook[] }) => {
     return (
-        <div className="m-2 p-4 bg-gray-900 border border-gray-700 rounded-lg shadow-lg flex flex-col gap-4">
-            <div className="overflow-y-auto max-h-[calc(100vh-325px)]">
-                <Table className="border-collapse w-full">
+        <div className="m-2 p-4 bg-gray-900 border border-gray-700 rounded-lg shadow-lg flex flex-col gap-4  overflow-y-auto max-h-[calc(100vh-290px)]">
+            <Table className="border-collapse w-full">
                     <TableCaption className="text-gray-400">
                         A list of all registered users.
                     </TableCaption>
 
                     {/* Table Header */}
-                    <TableHeader className="bg-primary-admin sticky top-0 z-10">
+                    <TableHeader className="bg-primary-admin sticky top-0 z-40">
                         <TableRow className="hover:bg-gray-900 border-none">
                             <TableHead className="text-gray-300">Books Title</TableHead>
                             <TableHead className="text-gray-300 text-center">Total Books</TableHead>
@@ -42,13 +42,9 @@ const AdminTable = ({ allBooks }: { allBooks: IBook[] }) => {
                                 <TableCell className="border-none">
                                     <Link href={`/books/${book._id}`} passHref>
                                         <div className="flex items-center gap-3 my-1">
-                                            <div className="w-9 h-11 relative">
-                                                <ClientImage
-                                                    path={book.coverUrl}
-                                                    alt="Book cover"
-                                                    className="rounded-sm object-fill"
-                                                />
-                                            </div>
+
+                                        <BookCover coverColor={book.coverColor} coverUrl={book.coverUrl} className="h-14 w-10" />
+
                                             <div>
                                                 <p className="font-semibold text-white">{book.title}</p>
                                                 <p className="text-gray-400 text-sm">{book.genre}</p>
@@ -79,8 +75,7 @@ const AdminTable = ({ allBooks }: { allBooks: IBook[] }) => {
                             </TableRow>
                         ))}
                     </TableBody>
-                </Table>
-            </div>
+            </Table>
         </div>
     );
 };
