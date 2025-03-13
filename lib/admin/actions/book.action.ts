@@ -162,6 +162,7 @@ export const getSimmilarBooks = async (bookId: string) => {
         const books = await Book.find({
             $or: [
                 { genre: book.genre },
+                { author: book.author },
             ],
             _id: { $ne: book._id },
         }).limit(5).lean<IBook[]>();
@@ -175,3 +176,22 @@ export const getSimmilarBooks = async (bookId: string) => {
         return { success: false, error: (error as Error).message };
     }
 }
+
+export const searchBooks = async (query: string) => {
+  await connectToMongoDB();
+  
+  if (!query) return { success: false, data: [] };
+
+try {
+    const books = await Book.find({
+        $or: [
+            { title: { $regex: query, $options: "i" } }, // Case-insensitive search
+            { author: { $regex: query, $options: "i" } } // Case-insensitive search by author
+        ]
+    }).limit(10);
+
+    return { success: true, data: JSON.parse(JSON.stringify(books)) };
+  } catch (error) {
+    return { success: false, data: [] };
+  }
+};

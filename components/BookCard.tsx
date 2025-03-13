@@ -36,7 +36,7 @@ const BookCard = async ({
 
 
   return (
-    <li className={cn(isLoanedBook && "xs:w-44 w-full")}>
+    <li className="w-44">
       <Link
         href={`/books/${_id}`}
         className={cn(isLoanedBook && "w-full flex flex-col items-center")}
@@ -61,7 +61,7 @@ const BookCard = async ({
             />
             <p className="text-gray-400">Borrowed on {formatDayMonth(borrowDate)}</p>
           </div>
-          <div className="book-loaned text-sm w-full flex justify-between mt-1 gap-1">
+          <div className="book-loaned flx gap-1 items-center">
             <div className="flex gap-1 items-center">
               {status === BORROW_STATUS_ENUM.BORROW ? (
                 <Image

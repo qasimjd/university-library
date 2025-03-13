@@ -295,7 +295,7 @@
 
   /* Library */
   .library {
-    @apply mx-auto flex max-w-xl w-full flex-col text-center;
+    @apply mx-auto flex w-full flex-col text-center;
   }
 
   .library-subtitle {

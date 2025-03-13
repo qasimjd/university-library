@@ -1,6 +1,6 @@
 "use server";
 
-import { signIn } from "@/auth";
+import { signIn, signOut } from "@/auth";
 import User, { IUser } from "@/database/Models/user.model";
 import { connectToMongoDB } from "../mongodb";
 import { headers } from "next/headers";
@@ -79,6 +79,10 @@ export async function signUp(params: Partial<IUser>) {
     return { success: false, error: "Something went wrong in creating User" };
   }
 }
+
+export const handleSignOut = async () => {
+  await signOut();
+};
 
 export async function getUserProfile(userId: string) {
   await connectToMongoDB();

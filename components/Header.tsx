@@ -1,29 +1,32 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { Avatar, AvatarFallback } from "./ui/avatar";
 import { Session } from "next-auth";
-import { LogOut } from "lucide-react";
-import { signOut } from "@/auth";
+import { LogoutDialog } from "./LogoutCard";
 
 const Header = ({ session }: { session: Session }) => {
+  const pathname = usePathname();
 
   return (
-    <header className="mt-6 flex justify-between items-center gap-6">
+    <header className="mt-6 flex justify-between items-center gap-6 min-w-7xl px-6">
       <Link href="/" className="flex items-center gap-2">
         <Image src="/icons/logo.svg" alt="logo" width={37} height={37} />
         <h1 className="text-2xl font-semibold text-gray-200 max-md:hidden">BooWise</h1>
       </Link>
 
       <ul className="flex flex-row gap-4 items-center">
-        <li className="text-white">
-          <Link href="/">
+        <li>
+          <Link href="/" className={`hover:text-primary ${pathname === "/" ? "text-primary" : "text-white"}`}>
             Home
           </Link>
         </li>
 
-        <li className="text-white">
-          <Link href="/admin">
-            search
+        <li>
+          <Link href="/search" className={`hover:text-primary ${pathname.startsWith("/search") ? "text-primary" : "text-white"}`}>
+            Search
           </Link>
         </li>
 
@@ -38,20 +41,8 @@ const Header = ({ session }: { session: Session }) => {
         </li>
 
         <li>
-          <form
-            action={async () => {
-              "use server";
-
-              await signOut();
-            }}
-            className=" cursor-pointer"
-          >
-            <button type="submit">
-              <LogOut size={24} className="text-red-600" />
-            </button>
-          </form>
+          <LogoutDialog />
         </li>
-
       </ul>
     </header>
   );
