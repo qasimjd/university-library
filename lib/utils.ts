@@ -10,7 +10,7 @@ export function formatCreatedAt(date: string | Date): string {
   if (!date) return "Unknown date"; // Prevents errors
   const parsedDate = typeof date === "string" ? new Date(date) : date;
   if (isNaN(parsedDate.getTime())) return "Invalid date"; 
-  return format(parsedDate, "MMMM dd, yyyy");
+  return format(parsedDate, "MM dd, yyyy");
 }
 
 export function formatDayMonth(date: string | Date): string {

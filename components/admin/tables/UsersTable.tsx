@@ -25,9 +25,10 @@ const AdminTable = ({ users }: { users: IUser[] }) => {
                 {/* Table Header */}
                 <TableHeader className="bg-primary-admin sticky top-0 z-10">
                     <TableRow className="hover:bg-gray-900 border-none">
-                        <TableHead className="w-[340px] text-gray-300">Name</TableHead>
-                        <TableHead className="w-[150px] text-gray-300">Date Joined</TableHead>
-                        <TableHead className="w-[120px] text-center text-gray-300">Role</TableHead>
+                        <TableHead className="w-[300px] text-gray-300">Name</TableHead>
+                        <TableHead className="text-gray-300">Date Joined</TableHead>
+                        <TableHead className="text-gray-300">Last Active</TableHead>
+                        <TableHead className="text-center text-gray-300">User Role</TableHead>
                         <TableHead className="text-gray-300 text-center">Books Borrowed</TableHead>
                         <TableHead className="text-gray-300">University ID</TableHead>
                         <TableHead className="text-gray-300">University Card</TableHead>
@@ -57,6 +58,11 @@ const AdminTable = ({ users }: { users: IUser[] }) => {
                             {/* Date Joined */}
                             <TableCell className="border-none text-gray-400">
                                 {formatCreatedAt(user.createdAt)}
+                            </TableCell>
+
+                            {/* last Active */}
+                            <TableCell className="border-none text-gray-400">
+                                {formatCreatedAt(user.lastActive)}
                             </TableCell>
 
                             {/* Role Dropdown */}
