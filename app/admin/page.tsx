@@ -37,9 +37,9 @@ const AdminDashboard = async ({ searchParams }: { searchParams: { [key: string]:
         <div className="flex w-full">
             <div className="flex-1 space-y-3 bg-gray-800">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    <StatsCard title="Borrowed Books" value={borrowRecords.length} change={borrowedChange} />
-                    <StatsCard title="Total Users" value={users.length} change={usersChange} />
-                    <StatsCard title="Total Books" value={allBooks.length} change={booksChange} />
+                    <StatsCard title="Borrowed Books" value={prevStats?.borrowedBooks ?? 0} change={borrowedChange} />
+                    <StatsCard title="Total Users" value={prevStats?.totalUsers ?? 0} change={usersChange} />
+                    <StatsCard title="Total Books" value={prevStats?.totalBooks ?? 0} change={booksChange} />
                 </div>
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
                     <div className="lg:col-span-1">

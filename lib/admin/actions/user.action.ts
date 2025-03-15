@@ -192,8 +192,8 @@ export const getBorrowRecords = async (searchQuery?: string) => {
 
         const records = await BorrowRecord.find(filter)
             .sort({ borrowDate: -1 }) 
-            .populate("userId", "name email")
-            .populate("bookId", "title")
+            .populate("userId")
+            .populate("bookId")
             .exec();
 
         return { success: true, data: JSON.parse(JSON.stringify(records)) || [] };
@@ -210,5 +210,11 @@ export async function getPreviousStats(): Promise<IStats | null> {
 
 export async function saveCurrentStats(data: Omit<IStats, "date">): Promise<void> {
     await connectToMongoDB();
+    const lastStat = await Stats.findOne().sort({ date: -1 });
+
+    if (lastStat && new Date().getTime() - new Date(lastStat.date).getTime() < 7 * 24 * 60 * 60 * 1000) {
+       return;
+    }
+
     await Stats.create({ ...data, date: new Date() });
 }

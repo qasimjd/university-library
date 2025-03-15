@@ -6,9 +6,9 @@ import Image from "next/image";
 
 const page = async ({ searchParams }: { searchParams: { [key: string]: string | undefined } }) => {
 
-  const quer = searchParams.query || "";
+  const query = searchParams.query || "";
 
-  const borrowRecordsResponse = await getBorrowRecords(quer);
+  const borrowRecordsResponse = await getBorrowRecords(query);
   const borrowRecords = borrowRecordsResponse.success && borrowRecordsResponse.data ? borrowRecordsResponse.data : [];
 
   return (
