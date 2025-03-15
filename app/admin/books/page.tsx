@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { getBooks } from "@/lib/admin/actions/book.action";
 import AllBooksTable from "@/components/admin/tables/BooksTable";
+import Image from "next/image";
+import { Card } from "@/components/ui/card";
 
 const Page = async ({ searchParams }: { searchParams: { [key: string]: string | undefined } }) => {
   const query = searchParams.query || "";
@@ -25,10 +27,15 @@ const Page = async ({ searchParams }: { searchParams: { [key: string]: string | 
         {allBooks.length > 0 ? (
           <AllBooksTable allBooks={allBooks} />
         ) : (
-          <p className="text-center text-gray-400">No books found.</p>
+          <Card className="bg-gray-900 text-gray-300 flex flex-col justify-center items-center border-none min-h-[calc(100vh-290px)]">
+            <Image src="/images/no-data.png" className="invert opacity-15" alt="empty" width={140} height={140} />
+            <div className="text-center">
+              <p className="text-gray-400 mt-2">No books found.</p>
+            </div>
+          </Card>
         )}
-      </div>
-    </section>
+    </div>
+    </section >
   );
 };
 

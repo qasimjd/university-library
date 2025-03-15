@@ -167,7 +167,7 @@ export const getRequestedUsers = async (searchQuery?: string) => {
             .sort({ createdAt: -1 })
             .lean();
 
-        return { success: true, data: requestedUsers || [] };
+        return { success: true, data: JSON.parse(JSON.stringify(requestedUsers)) || [] };
     } catch (error) {
         console.error("Error fetching requested users:", error);
         return { success: false, error: (error as Error).message };
@@ -196,7 +196,7 @@ export const getBorrowRecords = async (searchQuery?: string) => {
             .populate("bookId", "title")
             .exec();
 
-        return { success: true, data: records || [] };
+        return { success: true, data: JSON.parse(JSON.stringify(records)) || [] };
     } catch (error) {
         console.error("Error fetching borrow records:", error);
         return { success: false, error: (error as Error).message };

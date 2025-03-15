@@ -4,16 +4,22 @@ import StatsCard from "@/components/admin/StatsCard";
 import BorrowRequests from "@/components/admin/BorrowRequests";
 import RecentlyAddedBooks from "@/components/admin/RecentlyAddedBooks";
 import AccountRequests from "@/components/admin/AccountRequests";
-import { getborrowRecords, getPreviousStats, getRequestedUsers, saveCurrentStats } from "@/lib/admin/actions/user.action";
+import { getBorrowRecords, getPreviousStats, getRequestedUsers, saveCurrentStats } from "@/lib/admin/actions/user.action";
 import { getBooks } from "@/lib/admin/actions/book.action";
 import { IStats } from "@/database/Models/stats.modle";
 import Link from "next/link";
 
-const AdminDashboard = async () => {
-    const borrowRecords = await getborrowRecords();
-    const users = await getRequestedUsers();
-    const res = await getBooks();
-    const allBooks = res.data || []; 
+const AdminDashboard = async ({ searchParams }: { searchParams: { [key: string]: string | undefined } }) => {
+
+    const query = searchParams.query || "";
+
+    const borrowResponse = await getBorrowRecords(query);
+    const usersResponse = await getRequestedUsers(query);
+    const booksResponse = await getBooks(query);
+
+    const borrowRecords = borrowResponse.success && borrowResponse.data ? borrowResponse.data : [];
+    const users = usersResponse.success && usersResponse.data ? usersResponse.data : [];
+    const allBooks = booksResponse.success && booksResponse.data ? booksResponse.data : [];
 
     const prevStats = await getPreviousStats();
 
@@ -40,7 +46,9 @@ const AdminDashboard = async () => {
                         <Card className="p-4 bg-gray-900 text-gray-100 border-none relative">
                             <div className="flex justify-between items-center mb-4">
                                 <h2 className="text-lg font-semibold">Borrow Records</h2>
-                                <button className="bg-gray-800 px-3 py-2 rounded-full text-xs"> <Link href="/admin/borrow-records">View All</Link> </button>
+                                <button className="bg-gray-800 px-3 py-2 rounded-full text-xs">
+                                    <Link href="/admin/borrow-records">View All</Link>
+                                </button>
                             </div>
                             <div className="h-[260px] overflow-y-auto relative">
                                 <BorrowRequests borrowRecords={borrowRecords} />
@@ -51,7 +59,9 @@ const AdminDashboard = async () => {
                         <Card className="mt-3 p-4 bg-gray-900 text-gray-100 border-none relative">
                             <div className="flex justify-between items-center mb-4">
                                 <h2 className="text-lg font-semibold">Account Requests</h2>
-                                <button className="bg-gray-800 px-3 py-2 rounded-full text-xs"> <Link href="/admin/account-requests">View All</Link> </button>
+                                <button className="bg-gray-800 px-3 py-2 rounded-full text-xs">
+                                    <Link href="/admin/account-requests">View All</Link>
+                                </button>
                             </div>
                             <div className="h-60 overflow-y-auto relative">
                                 <AccountRequests users={users} />
@@ -63,7 +73,9 @@ const AdminDashboard = async () => {
                         <Card className="p-4 bg-gray-900 text-gray-100 border-none relative">
                             <div className="flex justify-between items-center mb-4">
                                 <h2 className="text-lg font-semibold">Recently Added Books</h2>
-                                <button className="bg-gray-800 px-3 py-2 rounded-full text-xs"> <Link href="/admin/books">View All</Link> </button>
+                                <button className="bg-gray-800 px-3 py-2 rounded-full text-xs">
+                                    <Link href="/admin/books">View All</Link>
+                                </button>
                             </div>
                             <div className="h-[590px] overflow-y-auto relative">
                                 <RecentlyAddedBooks allBooks={allBooks} />
