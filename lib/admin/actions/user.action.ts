@@ -8,19 +8,30 @@ import User, { IUser, UserRole, UserStatus } from "@/database/Models/user.model"
 import { connectToMongoDB } from "@/lib/mongodb";
 import { revalidatePath } from "next/cache";
 
-export const getAllUsers = async () => {
-    const session = await auth();
-    const userId = session?.user?.id;
+export const getAllUsers = async (searchQuery?: string) => {
     try {
-        await connectToMongoDB();
-        const users = await User.find({ _id: { $ne: userId } }).lean<IUser>();
-        if (!users) {
-            return null;
+        const session = await auth();
+        if (!session?.user?.id) {
+            return { success: false, error: "Unauthorized: No user session found" };
         }
-        return JSON.parse(JSON.stringify(users));
+
+        await connectToMongoDB();
+
+        const filter: Record<string, any> = { _id: { $ne: session.user.id } };
+        
+        if (searchQuery) {
+            filter["$or"] = [
+                { name: { $regex: searchQuery, $options: "i" } }, // Case-insensitive search in name
+                { email: { $regex: searchQuery, $options: "i" } }, // Case-insensitive search in email
+            ];
+        }
+
+        const users = await User.find(filter).lean<IUser[]>();
+
+        return { success: true, data: JSON.parse(JSON.stringify(users))  || [] };
     } catch (error) {
-        console.log(error);
-        return null;
+        console.error("Error fetching users:", error);
+        return { success: false, error: (error as Error).message };
     }
 };
 

@@ -1,7 +1,16 @@
+"use client"
+
 import { Session } from "next-auth";
-import SearchBar from "../SearchBar";
+import AdminSearch from "./AdminSearch";
+import { usePathname } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+
 
 const Header = ({ session }: { session: Session }) => {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const query = searchParams.get("query") || "";
+
   return (
     <header className="admin-header">
       <div>
@@ -13,7 +22,7 @@ const Header = ({ session }: { session: Session }) => {
         </p>
       </div>
 
-      {/* <SearchBar /> */}
+      <AdminSearch pathname={pathname} query={query} />
     </header>
   );
 };

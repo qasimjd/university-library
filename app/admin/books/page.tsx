@@ -4,11 +4,11 @@ import Link from "next/link";
 import { getBooks } from "@/lib/admin/actions/book.action";
 import AllBooksTable from "@/components/admin/tables/BooksTable";
 
-const Page = async () => {
+const Page = async ({ searchParams }: { searchParams: { [key: string]: string | undefined } }) => {
+  const query = searchParams.query || "";
 
-  const res = await getBooks();
-  const allBooks = res.data;
-  if (!allBooks) return [];
+  const res = await getBooks(query);
+  const allBooks = res?.data || [];
 
   return (
     <section className="w-full rounded-md text-gray-100 bg-gray-900 p-4">
@@ -22,7 +22,11 @@ const Page = async () => {
       </div>
 
       <div className="mt-7 w-full overflow-hidden">
-        {allBooks && <AllBooksTable allBooks={allBooks} />}
+        {allBooks.length > 0 ? (
+          <AllBooksTable allBooks={allBooks} />
+        ) : (
+          <p className="text-center text-gray-400">No books found.</p>
+        )}
       </div>
     </section>
   );

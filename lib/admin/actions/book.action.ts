@@ -35,11 +35,20 @@ export const createBook = async (params: CreateBookParams) => {
     }
 };
 
-export const getBooks = async () => {
+export const getBooks = async (query?: string) => {
     try {
         await connectToMongoDB();
 
-        const books = await Book.find().sort({ createdAt: -1 }).lean<IBook[]>();
+        const filter = query
+            ? {
+                  $or: [
+                      { title: { $regex: query, $options: "i" } }, // Case-insensitive title search
+                      { genre: { $regex: query, $options: "i" } }, // Case-insensitive genre search
+                  ],
+              }
+            : {};
+
+        const books = await Book.find(filter).sort({ createdAt: -1 }).lean<IBook[]>();
 
         return {
             success: true,
