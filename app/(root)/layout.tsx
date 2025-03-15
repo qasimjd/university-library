@@ -30,10 +30,10 @@ const Layout = async ({ children }: { children: ReactNode }) => {
 
   return (
     <main className="root-container">
-        <Header session={session} />
       <div className="mx-auto max-w-7xl">
+        <Header session={session} />
 
-        <div className="mt-20 pb-20">{children}</div>
+        <div className="mt-14 pb-20">{children}</div>
       </div>
     </main>
   );

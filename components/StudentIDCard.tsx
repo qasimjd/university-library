@@ -15,7 +15,7 @@ const StudentIDCard = ({userProfile}: {userProfile: IUser}) => {
 
       <div className="flex gap-2 items-center">
         <Avatar className="size-24">
-          <AvatarFallback className="w-full h-full bg-blue-400 border-4 border-gray-700 text-black font-normal text-4xl">
+          <AvatarFallback className="w-full h-full bg-primary border-4 border-gray-700 text-black font-normal text-4xl">
             {fullName.charAt(0) || "U"}
           </AvatarFallback>
         </Avatar>

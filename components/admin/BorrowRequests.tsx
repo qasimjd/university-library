@@ -5,8 +5,6 @@ import { IBorrowRecord } from "@/database/Models/borrowRecords";
 import { IBook } from "@/database/Models/book.modle";
 import { IUser } from "@/database/Models/user.model";
 import BookCover from "../BookCover";
-import { Button } from "../ui/button";
-import Link from "next/link";
 import BorrowReceipt from "../BorrowReceipt";
 
 interface BorroRecordsTableProps {
@@ -15,7 +13,13 @@ interface BorroRecordsTableProps {
 
 const BorrowRequests = ({ borrowRecords }: BorroRecordsTableProps) => {
   if (!borrowRecords || borrowRecords.length === 0) {
-    return <p className="text-gray-400">No borrow records found.</p>;
+    return <Card className="bg-gray-900 text-gray-300 flex flex-col justify-center items-center border-none">
+      <Image src="/images/no-data.png" className="invert opacity-15" alt="empty" width={120} height={120} />
+      <div className="text-center">
+        <h2>No Panding Book Request</h2>
+        <p className="text-gray-400 mt-2">There are no pending book requests at the moment.</p>
+      </div>
+    </Card>;
   }
 
   return (

@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import BookCover from "@/components/BookCover";
-import { cn, formatCreatedAt, formatDayMonth } from "@/lib/utils";
+import { cn, formatDayMonth, hexToRgb } from "@/lib/utils";
 import Image from "next/image";
 import { IBook } from "@/database/Models/book.modle";
 import { auth } from "@/auth";
@@ -28,7 +28,7 @@ const BookCard = async ({
   const record = await BorrowedRecord({ userId, bookId });
   const { borrowDate, status, returnDate } = record as IBorrowRecord;
 
-  const dueDate = new Date(record.dueDate); // Ensure dueDate is a Date object
+  const dueDate = new Date(record.dueDate); 
   const daysLeft = Math.ceil((dueDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24));
 
   const hasBorrowed = user?.borrowBooksIds?.some((id) => id.toString() === _id.toString());
@@ -36,21 +36,23 @@ const BookCard = async ({
 
 
   return (
-    <li className="w-44">
+    <li className={cn(isLoanedBook && "w-44")}>
       <Link
         href={`/books/${_id}`}
         className={cn(isLoanedBook && "w-full flex flex-col items-center")}
       >
-        <BookCover coverColor={coverColor} coverUrl={coverUrl} />
+        <div className={isLoanedBook ? "p-4 rounded-lg" : ""} style={{ backgroundColor: `rgba(${hexToRgb(coverColor)}, 0.3)` }}>
+          <BookCover variant={isLoanedBook ? "medium" : undefined} coverColor={coverColor} coverUrl={coverUrl} />
+        </div>
 
-        <div className={cn("mt-4", !isLoanedBook && "xs:max-w-40 max-w-28")}>
+        <div className={cn("mt-4", !isLoanedBook && "xs:max-w-40 max-w-24")}>
           <p className="book-title">{title}</p>
           <p className="book-genre">{genre}</p>
         </div>
       </Link>
 
       {isLoanedBook && (
-        <div className="flex text-sm flex-col mt-2 gap-1 w-full">
+        <div className="flex text-xs xs:text-sm flex-col mt-2 gap-1 w-full">
           <div className="book-loaned flx gap-1 items-center">
             <Image
               src="/icons/book-2.svg"

@@ -1,9 +1,14 @@
+import { auth } from "@/auth";
 import BookList from "@/components/BookList";
 import BookOverview from "@/components/BookOverview";
-import { getBooks } from "@/lib/admin/actions/book.action";
+import { getBooksforRoot } from "@/lib/admin/actions/book.action";
 
 const Home = async () => {
-  const result = await getBooks();
+
+  const session = await auth();
+  const userId = session?.user?.id;
+
+  const result = await getBooksforRoot(userId || "");
 
   if (!result.success) {
     return <p>Error loading books</p>;

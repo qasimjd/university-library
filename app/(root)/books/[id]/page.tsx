@@ -36,7 +36,7 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
                     </section>
                 </div>
 
-                {books && (
+                {books.length > 0 && (
                     <section className="w-1/3 flex ">
                         <BookList title="Similer Books" books={books} />
                     </section>

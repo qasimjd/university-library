@@ -51,6 +51,27 @@ export const getBooks = async () => {
     }
 };
 
+export const getBooksforRoot = async ( userId: string) => {
+    try {
+        await connectToMongoDB();
+
+        const user = await User.findById(userId).select("borrowBooksIds").lean<IUser>();
+        if (!user) throw new Error("User not found");
+
+        const books = await Book.find({
+            _id: { $nin: user.borrowBooksIds },
+        }).sort({ createdAt: -1 }).lean<IBook[]>();
+
+        return {
+            success: true,
+            data: books,
+        };
+    } catch (error) {
+        console.error("Error fetching books:", error);
+        return { success: false, error: (error as Error).message };
+    }
+};
+
 export const borrowBook = async (params: BorrowParams) => {
     const { userId, bookId } = params;
 

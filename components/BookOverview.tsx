@@ -77,7 +77,7 @@ const BookOverview = async ({
                             coverUrl={coverUrl}
                         />
 
-                        <div className='absolute left-16 top-12 rotate-12 opacity-40 max-sm:hidden'>
+                        <div className='absolute left-11 top-9 xs:left-16 xs:top-12 rotate-12 opacity-40 max-sm:hidden'>
                             <BookCover
                                 variant='wide'
                                 coverColor={coverColor}

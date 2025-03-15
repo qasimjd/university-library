@@ -15,26 +15,30 @@ export function LogoutDialog() {
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <button className="p-2 rounded-full hover:bg-gray-700 transition">
+                <button className="rounded-full">
                     <LogOut size={24} className="text-red-500" />
                 </button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-md bg-blue-950 text-white border border-primary p-6 rounded-xl shadow-xl"
-            style={{
-                backgroundImage: "url('/images/pattern.webp')",
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                backgroundBlendMode: "overlay",
-            }}>
+            <DialogContent className="smmax-w-md bg-blue-950 text-white border border-primary p-6 rounded-xl shadow-xl"
+                style={{
+                    backgroundImage: "url('/images/pattern.webp')",
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                    backgroundBlendMode: "overlay",
+                }}>
                 <DialogHeader className="text-center">
-                    <DialogTitle className="text-lg font-semibold text-red-500">Sign Out</DialogTitle>
+                    <DialogTitle className="text-lg font-semibold text-white">Sign Out</DialogTitle>
                     <DialogDescription className="text-gray-300">
                         Are you sure you want to log out? You will need to sign in again to access your account.
                     </DialogDescription>
                 </DialogHeader>
-                <DialogFooter className="flex justify-center gap-4 mt-4">
+                <DialogFooter className="mt-4">
                     <form action={handleSignOut}>
-                        <Button variant="destructive" className="bg-red-600">
+                        <Button
+                            type="submit"
+                            variant="destructive"
+                            className="bg-red-700 hover:bg-red-600 w-full transition-colors duration-200"
+                        >
                             Logout
                         </Button>
                     </form>

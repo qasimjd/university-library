@@ -24,13 +24,13 @@ const Page = async () => {
   if (!userProfile) return null;
 
   return (
-    <main className="w-full h-[5px] mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 px-4">
+    <main className="w-full h-[5px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
 
       <section className="md:col-span-1 flex justify-center">
         <StudentIDCard userProfile={userProfile} />
       </section>
 
-      <section className="md:col-span-2">
+      <section className="md:col-span-1">
         {books && books.length > 0 ? (
           <BookList title="Borrowed Books" books={books} containerClassName="mx-auto" />
         ) : (
