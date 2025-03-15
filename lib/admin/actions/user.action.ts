@@ -148,42 +148,58 @@ export const deleteBookModle = async (bookId: string) => {
     }
 };
 
-export const getRequestedUsers = async () => {
-    try {
-        connectToMongoDB();
-        const users = await User.find().sort({ createdAt: -1 })
-        if (!users) {
-            return null;
-        }
-        const requestedUsers = users.filter((user) => user.status === UserStatus.PENDING || user.status === UserStatus.REJECT);
-        if (!requestedUsers) {
-            return [];
-        }
-        return JSON.parse(JSON.stringify(requestedUsers));
-    } catch (error) {
-        console.log(error);
-        return null;
-    }
-};
-
-export const getborrowRecords = async () => {
+export const getRequestedUsers = async (searchQuery?: string) => {
     try {
         await connectToMongoDB();
 
-        const records = await BorrowRecord.find()
-            .sort({ borrowDate: -1 }) // Sort by borrowDate in descending order
-            .populate("userId")
-            .populate("bookId")
-            .exec();
+        const filter: Record<string, any> = {
+            status: { $in: [UserStatus.PENDING, UserStatus.REJECT] },
+        };
 
-        if (!records || records.length === 0) {
-            return [];
+        if (searchQuery) {
+            filter["$or"] = [
+                { name: { $regex: searchQuery, $options: "i" } }, // Search by name
+                { email: { $regex: searchQuery, $options: "i" } }, // Search by email
+            ];
         }
 
-        return JSON.parse(JSON.stringify(records));
+        const requestedUsers = await User.find(filter)
+            .sort({ createdAt: -1 })
+            .lean();
+
+        return { success: true, data: requestedUsers || [] };
+    } catch (error) {
+        console.error("Error fetching requested users:", error);
+        return { success: false, error: (error as Error).message };
+    }
+};
+
+export const getBorrowRecords = async (searchQuery?: string) => {
+    try {
+        await connectToMongoDB();
+
+        const filter: Record<string, any> = {};
+
+        if (searchQuery) {
+            const users = await User.find({ name: { $regex: searchQuery, $options: "i" } }).select("_id");
+            const books = await Book.find({ title: { $regex: searchQuery, $options: "i" } }).select("_id");
+
+            filter["$or"] = [
+                { userId: { $in: users.map(user => user._id) } }, // Match by user name
+                { bookId: { $in: books.map(book => book._id) } }, // Match by book title
+            ];
+        }
+
+        const records = await BorrowRecord.find(filter)
+            .sort({ borrowDate: -1 }) 
+            .populate("userId", "name email")
+            .populate("bookId", "title")
+            .exec();
+
+        return { success: true, data: records || [] };
     } catch (error) {
         console.error("Error fetching borrow records:", error);
-        throw new Error("Failed to fetch borrow records");
+        return { success: false, error: (error as Error).message };
     }
 };
 

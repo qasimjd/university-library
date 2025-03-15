@@ -2,9 +2,10 @@ import AccountTable from "@/components/admin/tables/RequestedTable";
 import { getRequestedUsers } from "@/lib/admin/actions/user.action";
 
 
-const page = async () => {
+const page = async ({ searchParams }: { searchParams: { [key: string]: string | undefined } }) => {
 
-  const users = await getRequestedUsers();
+  const query = searchParams.query || "";
+  const users = await getRequestedUsers(query);
 
   return (
     <section className="w-full rounded-md text-gray-100 bg-gray-900 p-4">
@@ -13,7 +14,7 @@ const page = async () => {
       </div>
 
       <div className="mt-7 w-full overflow-hidden">
-        <AccountTable users={users} />
+        <AccountTable users={users.success && users.data ? users.data : []} />
       </div>
     </section>
   )

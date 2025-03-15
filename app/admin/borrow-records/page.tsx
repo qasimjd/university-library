@@ -1,10 +1,14 @@
 import BorroRecordsTable from "@/components/admin/tables/BorroRecordsTable";
-import { getborrowRecords } from "@/lib/admin/actions/user.action";
+import { getBorrowRecords } from "@/lib/admin/actions/user.action";
 
 
-const page = async () => {
+const page = async ({ searchParams }: { searchParams: { [key: string]: string | undefined } }) => {
 
-  const borrowRecords = await getborrowRecords();
+  const quer = searchParams.query || "";
+
+  const borrowRecordsResponse = await getBorrowRecords(quer);
+  const borrowRecords = borrowRecordsResponse.success && borrowRecordsResponse.data ? borrowRecordsResponse.data : [];
+  
   return (
     <section className="w-full rounded-md text-gray-100 bg-gray-900 p-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
