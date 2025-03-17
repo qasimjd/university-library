@@ -19,19 +19,17 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import FileUpload from "@/components/FileUpload";
 import ColorPicker from "@/components/admin/ColorPicker";
-import { createBook } from "@/lib/admin/actions/book.action";
+import { createBook, updateBook } from "@/lib/admin/actions/book.action";
 import { toast } from "sonner"
+import { IBook } from "@/database/Models/book.modle";
 
-// interface Props extends Partial<Book> {
-//     type?: "create" | "update";
-// }
 
-const BookForm = () => {
+const BookForm = ({ book, type = "create" }: { book?: IBook; type?: "create" | "update" }) => {
     const router = useRouter();
 
     const form = useForm<z.infer<typeof bookSchema>>({
         resolver: zodResolver(bookSchema),
-        defaultValues: {
+        defaultValues: book || {
             title: "",
             description: "",
             author: "",
@@ -47,18 +45,25 @@ const BookForm = () => {
     });
 
     const onSubmit = async (values: z.infer<typeof bookSchema>) => {
-        const result = await createBook(values);
-        toast.success("Book added successfully");
+        let result;
+        if (type === "update" && book?._id) {
+            result = await updateBook(book._id.toString(), values);
+            toast.success("Book updated successfully");
+        } else {
+            result = await createBook(values);
+            toast.success("Book added successfully");
+        }
+
         if (result.success) {
             router.push("/admin/books");
         } else {
-            toast.error("Failed to add book");
+            toast.error("Failed to save book");
         }
     };
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8  text-gray-300">
                 <div className="flex gap-4">
                     <FormField
                         control={form.control}
@@ -305,7 +310,7 @@ const BookForm = () => {
                 />
 
                 <Button type="submit" className="book-form_btn text-white">
-                    Add Book to Library
+                   { type === "create" ? "Add Book to Library": "Update Book"}
                 </Button>
             </form>
         </Form>

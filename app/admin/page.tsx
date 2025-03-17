@@ -8,6 +8,9 @@ import { getBorrowRecords, getPreviousStats, getRequestedUsers, saveCurrentStats
 import { getBooks } from "@/lib/admin/actions/book.action";
 import { IStats } from "@/database/Models/stats.modle";
 import Link from "next/link";
+import Book from "@/database/Models/book.modle";
+import User from "@/database/Models/user.model";
+import BorrowRecord from "@/database/Models/borrowRecords";
 
 const AdminDashboard = async ({ searchParams }: { searchParams: { [key: string]: string | undefined } }) => {
 
@@ -21,25 +24,30 @@ const AdminDashboard = async ({ searchParams }: { searchParams: { [key: string]:
     const users = usersResponse.success && usersResponse.data ? usersResponse.data : [];
     const allBooks = booksResponse.success && booksResponse.data ? booksResponse.data : [];
 
-    const prevStats = await getPreviousStats();
-
-    const borrowedChange = prevStats ? borrowRecords.length - prevStats.borrowedBooks : 0;
-    const usersChange = prevStats ? users.length - prevStats.totalUsers : 0;
-    const booksChange = prevStats ? allBooks.length - prevStats.totalBooks : 0;
-
+    const [prevStats, totalDBBooks, totalDBUsers, totalDBBorrowRecords] = await Promise.all([
+        getPreviousStats(),
+        Book.countDocuments(),
+        User.countDocuments(),
+        BorrowRecord.countDocuments(),
+    ]);
+    
+    const borrowedChange = prevStats ? totalDBBorrowRecords - prevStats.borrowedBooks : 0;
+    const usersChange = prevStats ? totalDBUsers - prevStats.totalUsers : 0;
+    const booksChange = prevStats ? totalDBBooks - prevStats.totalBooks : 0;
+    
     await saveCurrentStats({
-        borrowedBooks: borrowRecords.length,
-        totalUsers: users.length,
-        totalBooks: allBooks.length,
+        borrowedBooks: totalDBBorrowRecords,
+        totalUsers: totalDBUsers,
+        totalBooks: totalDBBooks,
     } as Omit<IStats, "date">);
-
+    
     return (
         <div className="flex w-full">
             <div className="flex-1 space-y-3 bg-gray-800">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    <StatsCard title="Borrowed Books" value={prevStats?.borrowedBooks ?? 0} change={borrowedChange} />
-                    <StatsCard title="Total Users" value={prevStats?.totalUsers ?? 0} change={usersChange} />
-                    <StatsCard title="Total Books" value={prevStats?.totalBooks ?? 0} change={booksChange} />
+                    <StatsCard title="Borrowed Books" value={totalDBBorrowRecords} change={borrowedChange} />
+                    <StatsCard title="Total Users" value={totalDBUsers} change={usersChange} />
+                    <StatsCard title="Total Books" value={totalDBBooks} change={booksChange} />
                 </div>
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
                     <div className="lg:col-span-1">

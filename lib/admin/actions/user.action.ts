@@ -210,10 +210,12 @@ export async function getPreviousStats(): Promise<IStats | null> {
 
 export async function saveCurrentStats(data: Omit<IStats, "date">): Promise<void> {
     await connectToMongoDB();
+
+    const oneMounthInMilliseconds = 30 * 24 * 60 * 60 * 1000;
     const lastStat = await Stats.findOne().sort({ date: -1 });
 
-    if (lastStat && new Date().getTime() - new Date(lastStat.date).getTime() < 7 * 24 * 60 * 60 * 1000) {
-       return;
+    if (lastStat && new Date().getTime() - new Date(lastStat.date).getTime() < oneMounthInMilliseconds) {
+        return;
     }
 
     await Stats.create({ ...data, date: new Date() });

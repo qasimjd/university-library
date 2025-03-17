@@ -224,3 +224,24 @@ try {
     return { success: false, data: [] };
   }
 };
+
+export async function updateBook(id: string, data: Partial<IBook>) {
+    await connectToMongoDB();
+    try {
+        await Book.findByIdAndUpdate(id, data, { new: true });
+        return { success: true };
+    } catch (error) {
+        return { success: false,  error };
+    }
+}
+
+export async function getBookById(id: string) {
+    await connectToMongoDB();
+    try {
+        const book = await
+        Book.findById(id).lean<IBook>();
+        return JSON.parse(JSON.stringify(book));
+    } catch (error) {
+        return null;
+    }
+}

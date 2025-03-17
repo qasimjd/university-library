@@ -91,7 +91,7 @@ const Header = ({ session }: { session: Session }) => {
               <Link 
                 href="/my-profile"
                 onClick={() => setIsOpen(false)}
-                className="flex items-center gap-3 p-3 hover:bg-gray-800 rounded-lg"
+                className={`flex items-center gap-3 p-3 rounded-lg transition ${pathname.startsWith("/my-profile") ? "bg-primary text-black" : "hover:bg-gray-800"}`}
               >
                 <User size={20} />
                 <span>My Profile</span>

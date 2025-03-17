@@ -9,7 +9,7 @@
     }
 
     .back-btn {
-        @apply mb-10 w-fit border border-gray-600 bg-dark-300 text-xs font-medium  hover:bg-dark-300 !important;
+        @apply mb-10 w-fit border border-gray-600 bg-dark-300 text-gray-400 text-xs font-medium  hover:bg-dark-200 !important;
     }
 
     /* Confirmation Dialog */

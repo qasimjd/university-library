@@ -18,7 +18,7 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 
 const BorrowReceipt = ({ receipt }: { receipt: IBorrowRecord }) => {
-    const { bookId, userId, borrowDate, dueDate, _id, status } = receipt;
+    const { bookId, userId, borrowDate, dueDate, _id, status, returnDate } = receipt;
     const id = _id as string;
     const book = bookId as IBook;
     const user = userId as IUser;
@@ -83,6 +83,7 @@ const BorrowReceipt = ({ receipt }: { receipt: IBorrowRecord }) => {
                         <li><strong>Genre:</strong> {book?.genre} </li>
                         <li><strong>Borrowed On:</strong> {formatCreatedAt(borrowDate)}</li>
                         <li><strong>Due Date:</strong> {formatCreatedAt(dueDate)}</li>
+                        {returnDate && <li><strong>Returned On:</strong> {formatCreatedAt(returnDate)}</li>}
                         <li><strong>Duration:</strong> {daysLeft > 0 ? `${daysLeft} day${daysLeft > 1 ? 's' : ''} left to due` : ' Over Due'}</li>
                     </ul>
 
