@@ -1,10 +1,12 @@
-import { getBookById, updateBook } from "@/lib/admin/actions/book.action";
+import { getBookById } from "@/lib/admin/actions/book.action";
 import BookForm from "@/components/admin/form/BookForm";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
-const EditBookPage = async ({ params }: { params: { id: string } }) => {
-    const book = await getBookById(params.id);
+const EditBookPage = async ({ params }: { params: Promise<{ id: string }> }) => {
+    const id = (await params).id;
+
+    const book = await getBookById(id);
 
     if (!book) {
         return <p className="text-red-500">Book not found.</p>;

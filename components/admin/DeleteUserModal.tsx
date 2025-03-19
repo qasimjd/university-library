@@ -8,15 +8,15 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import { deleteBookModle, deleteUserModle } from '@/lib/admin/actions/user.action';
+import { deleteBookModel, deleteUserModel } from '@/lib/admin/actions/user.action';
 import { AlertTriangle, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 const DeleteUserDialog = ({ userId }: { userId: string }) => {
 
     const handleDeleteUser = async () => {
-        const res = await deleteUserModle(userId);
-        if (res.succes) {
+        const res = await deleteUserModel(userId);
+        if (res.success) {
             toast.success(res.message);
         } else {
             toast.error(res.message);
@@ -64,8 +64,8 @@ export default DeleteUserDialog;
 export const DeleteBookDialog = ({ bookId }: { bookId: string }) => {
 
     const handleDeleteUser = async () => {
-        const res = await deleteBookModle(bookId);
-        if (res.succes) {
+        const res = await deleteBookModel(bookId);
+        if (res.success) {
             toast.success(res.message);
         } else {
             toast.error(res.message);

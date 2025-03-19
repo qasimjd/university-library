@@ -9,7 +9,6 @@ import {
 } from "@/components/ui/dialog";
 import { IBook } from "@/database/Models/book.modle";
 import { IBorrowRecord } from "@/database/Models/borrowRecords";
-import { IUser } from "@/database/Models/user.model";
 import { formatCreatedAt } from "@/lib/utils";
 import { ReceiptText, Download } from "lucide-react";
 import Image from "next/image";
@@ -18,10 +17,9 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 
 const BorrowReceipt = ({ receipt }: { receipt: IBorrowRecord }) => {
-    const { bookId, userId, borrowDate, dueDate, _id, status, returnDate } = receipt;
+    const { bookId, borrowDate, dueDate, _id, status, returnDate } = receipt;
     const id = _id as string;
     const book = bookId as IBook;
-    const user = userId as IUser;
 
     const receiptRef = useRef<HTMLDivElement>(null);
 

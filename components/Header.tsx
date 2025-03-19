@@ -12,11 +12,10 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Session } from "next-auth";
 import { LogoutDialog } from "./LogoutCard";
 import { Home, Menu, Search, User } from "lucide-react";
 
-const Header = ({ session }: { session: Session }) => {
+const Header = () => {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
 

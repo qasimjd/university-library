@@ -40,3 +40,10 @@ interface Book {
     bookId: string;
     userId: string;
   }
+
+  // types/index.d.ts
+export type SearchParamsProps = {
+  searchParams: {
+    query?: string;
+  };
+};

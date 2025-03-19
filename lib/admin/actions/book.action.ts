@@ -40,11 +40,11 @@ export const getBooks = async (query?: string) => {
 
         const filter = query
             ? {
-                  $or: [
-                      { title: { $regex: query, $options: "i" } }, // Case-insensitive title search
-                      { genre: { $regex: query, $options: "i" } }, // Case-insensitive genre search
-                  ],
-              }
+                $or: [
+                    { title: { $regex: query, $options: "i" } }, // Case-insensitive title search
+                    { genre: { $regex: query, $options: "i" } }, // Case-insensitive genre search
+                ],
+            }
             : {};
 
         const books = await Book.find(filter).sort({ createdAt: -1 }).lean<IBook[]>();
@@ -59,7 +59,7 @@ export const getBooks = async (query?: string) => {
     }
 };
 
-export const getBooksforRoot = async ( userId: string) => {
+export const getBooksforRoot = async (userId: string) => {
     try {
         await connectToMongoDB();
 
@@ -168,16 +168,16 @@ export const BorrowedRecord = async (params: BorrowParams) => {
             userId: user._id,
             bookId: book._id,
         }).populate("bookId")
-        .populate("userId")
-        .select("borrowDate dueDate returnDate status");
+            .populate("userId")
+            .select("borrowDate dueDate returnDate status");
 
         if (!borrowedRecord) return { success: false, error: "Borrow record not found" };
 
         return JSON.parse(JSON.stringify(borrowedRecord));
-        
+
     } catch (error) {
         console.error("Error fetching borrow record:", error);
-        return { success: false, error: (error as Error).message };        
+        return { success: false, error: (error as Error).message };
     }
 };
 
@@ -207,22 +207,22 @@ export const getSimmilarBooks = async (bookId: string) => {
 }
 
 export const searchBooks = async (query: string) => {
-  await connectToMongoDB();
-  
-  if (!query) return { success: false, data: [] };
+    await connectToMongoDB();
 
-try {
-    const books = await Book.find({
-        $or: [
-            { title: { $regex: query, $options: "i" } }, // Case-insensitive search
-            { author: { $regex: query, $options: "i" } } // Case-insensitive search by author
-        ]
-    }).limit(10);
+    if (!query) return { success: false, data: [] };
 
-    return { success: true, data: JSON.parse(JSON.stringify(books)) };
-  } catch (error) {
-    return { success: false, data: [] };
-  }
+    try {
+        const books = await Book.find({
+            $or: [
+                { title: { $regex: query, $options: "i" } }, // Case-insensitive search
+                { author: { $regex: query, $options: "i" } } // Case-insensitive search by author
+            ]
+        }).limit(10);
+
+        return { success: true, data: JSON.parse(JSON.stringify(books)) };
+    } catch {
+        return { success: false, data: [] };
+    }
 };
 
 export async function updateBook(id: string, data: Partial<IBook>) {
@@ -231,7 +231,8 @@ export async function updateBook(id: string, data: Partial<IBook>) {
         await Book.findByIdAndUpdate(id, data, { new: true });
         return { success: true };
     } catch (error) {
-        return { success: false,  error };
+        console.error("Error updating book:", error);
+        return { success: false, error: (error as Error).message };
     }
 }
 
@@ -239,9 +240,10 @@ export async function getBookById(id: string) {
     await connectToMongoDB();
     try {
         const book = await
-        Book.findById(id).lean<IBook>();
+            Book.findById(id).lean<IBook>();
         return JSON.parse(JSON.stringify(book));
     } catch (error) {
-        return null;
+        console.error("Error updating book:", error);
+        return { success: false, error: (error as Error).message };
     }
 }

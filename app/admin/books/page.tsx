@@ -6,8 +6,8 @@ import AllBooksTable from "@/components/admin/tables/BooksTable";
 import Image from "next/image";
 import { Card } from "@/components/ui/card";
 
-const Page = async ({ searchParams }: { searchParams: { [key: string]: string | undefined } }) => {
-  const query = searchParams.query || "";
+const Page = async ({ searchParams }: {searchParams: Promise<{ query?: string }> }) => {
+  const query = (await searchParams).query;
 
   const res = await getBooks(query);
   const allBooks = res?.data || [];

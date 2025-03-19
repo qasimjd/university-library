@@ -4,9 +4,8 @@ import { getBorrowRecords } from "@/lib/admin/actions/user.action";
 import Image from "next/image";
 
 
-const page = async ({ searchParams }: { searchParams: { [key: string]: string | undefined } }) => {
-
-  const query = searchParams.query || "";
+const page = async ({ searchParams }: {searchParams: Promise<{ query?: string }> }) => {
+  const query = (await searchParams).query;
 
   const borrowRecordsResponse = await getBorrowRecords(query);
   const borrowRecords = borrowRecordsResponse.success && borrowRecordsResponse.data ? borrowRecordsResponse.data : [];

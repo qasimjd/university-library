@@ -4,9 +4,9 @@ import { getRequestedUsers } from "@/lib/admin/actions/user.action";
 import Image from "next/image";
 
 
-const page = async ({ searchParams }: { searchParams: { [key: string]: string | undefined } }) => {
-
-  const query = searchParams.query || "";
+const page = async ({ searchParams }: {searchParams: Promise<{ query?: string }> }) => {
+  const query = (await searchParams).query;
+  
   const usersResponse = await getRequestedUsers(query);
   const users = usersResponse.success && usersResponse.data ? usersResponse.data : [];
 

@@ -12,9 +12,8 @@ import Book from "@/database/Models/book.modle";
 import User from "@/database/Models/user.model";
 import BorrowRecord from "@/database/Models/borrowRecords";
 
-const AdminDashboard = async ({ searchParams }: { searchParams: { [key: string]: string | undefined } }) => {
-
-    const query = searchParams.query || "";
+const AdminDashboard = async ({ searchParams }: {searchParams: Promise<{ query?: string }> }) => {
+    const query = (await searchParams).query;
 
     const borrowResponse = await getBorrowRecords(query);
     const usersResponse = await getRequestedUsers(query);

@@ -17,59 +17,58 @@ export const getAllUsers = async (searchQuery?: string) => {
 
         await connectToMongoDB();
 
-        const filter: Record<string, any> = { _id: { $ne: session.user.id } };
-        
+        const filter: Record<string, unknown> = { _id: { $ne: session.user.id } };
+
         if (searchQuery) {
             filter["$or"] = [
-                { name: { $regex: searchQuery, $options: "i" } }, // Case-insensitive search in name
-                { email: { $regex: searchQuery, $options: "i" } }, // Case-insensitive search in email
+                { name: { $regex: searchQuery, $options: "i" } },
+                { email: { $regex: searchQuery, $options: "i" } },
             ];
         }
 
-        const users = await User.find(filter).lean<IUser[]>();
+        const users: IUser[] = await User.find(filter).lean();
 
-        return { success: true, data: JSON.parse(JSON.stringify(users))  || [] };
+        return { success: true, data: JSON.parse(JSON.stringify(users)) || [] };
     } catch (error) {
         console.error("Error fetching users:", error);
         return { success: false, error: (error as Error).message };
     }
 };
 
-export const deleteUserModle = async (userId: string) => {
+export const deleteUserModel = async (userId: string) => {
     try {
-        connectToMongoDB();
+        await connectToMongoDB();
         const user = await User.findByIdAndDelete(userId);
         if (!user) {
-            return { succes: false, message: "User not found" };
+            return { success: false, message: "User not found" };
         }
         revalidatePath("/admin/users");
-        return { succes: true, message: "User deleted successfully" };
+        return { success: true, message: "User deleted successfully" };
     } catch (error) {
-        console.log(error);
-        return { succes: false, message: "faild to delete user" };
+        console.error(error);
+        return { success: false, message: "Failed to delete user" };
     }
 };
 
 export const toggleRole = async (userId: string) => {
     try {
-        connectToMongoDB();
+        await connectToMongoDB();
         const user = await User.findById(userId).select("role");
         if (!user) {
             return { success: false, message: "User not found" };
         }
         user.role = user.role === UserRole.USER ? UserRole.ADMIN : UserRole.USER;
         await user.save();
-        // revalidatePath("/admin/users");
         return { success: true, message: "User role updated successfully", data: user.role };
     } catch (error) {
-        console.log(error);
+        console.error(error);
         return { success: false, message: "Failed to update user role" };
     }
-}
+};
 
 export const toggleStatus = async (userId: string, currentUserStatus: UserStatus) => {
     try {
-        connectToMongoDB();
+        await connectToMongoDB();
         const user = await User.findById(userId).select("status");
         if (!user) {
             return { success: false, message: "User not found" };
@@ -77,19 +76,18 @@ export const toggleStatus = async (userId: string, currentUserStatus: UserStatus
 
         user.status = currentUserStatus;
         await user.save();
-        // revalidatePath("/admin/users");
         return { success: true, message: "User status updated successfully" };
     } catch (error) {
-        console.log(error);
+        console.error(error);
         return { success: false, message: "Failed to update user status" };
     }
-}
+};
 
 export const toggleRecord = async (recordId: string, currentUserStatus: BORROW_STATUS_ENUM) => {
     try {
         await connectToMongoDB();
 
-        const record = await BorrowRecord.findById(recordId).select("bookId").select("userId");
+        const record = await BorrowRecord.findById(recordId).select("bookId userId");
         if (!record) {
             return { success: false, message: "Borrow record not found" };
         }
@@ -107,7 +105,6 @@ export const toggleRecord = async (recordId: string, currentUserStatus: BORROW_S
         if (currentUserStatus === BORROW_STATUS_ENUM.RETURN) {
             book.availableCopies += 1;
             record.returnDate = new Date();
-            // user.borrowBooksIds = user.borrowBooksIds.filter((id) => id.toString() !== book._id.toString());
             record.status = BORROW_STATUS_ENUM.RETURN;
         }
 
@@ -125,26 +122,25 @@ export const toggleRecord = async (recordId: string, currentUserStatus: BORROW_S
         }
 
         await Promise.all([book.save(), record.save(), user.save()]);
-        // revalidatePath(`/books/${book1}`);
         return { success: true, message: "Record status updated successfully" };
     } catch (error) {
-        console.log(error);
+        console.error(error);
         return { success: false, message: "Failed to update record status" };
     }
-}
+};
 
-export const deleteBookModle = async (bookId: string) => {
+export const deleteBookModel = async (bookId: string) => {
     try {
-        connectToMongoDB();
+        await connectToMongoDB();
         const book = await Book.findByIdAndDelete(bookId);
         if (!book) {
-            return { succes: false, message: "Book not found" };
+            return { success: false, message: "Book not found" };
         }
         revalidatePath("/admin/books");
-        return { succes: true, message: "Book deleted successfully" };
+        return { success: true, message: "Book deleted successfully" };
     } catch (error) {
-        console.log(error);
-        return { succes: false, message: "faild to delete book" };
+        console.error(error);
+        return { success: false, message: "Failed to delete book" };
     }
 };
 
@@ -152,20 +148,18 @@ export const getRequestedUsers = async (searchQuery?: string) => {
     try {
         await connectToMongoDB();
 
-        const filter: Record<string, any> = {
+        const filter: Record<string, unknown> = {
             status: { $in: [UserStatus.PENDING, UserStatus.REJECT] },
         };
 
         if (searchQuery) {
             filter["$or"] = [
-                { name: { $regex: searchQuery, $options: "i" } }, // Search by name
-                { email: { $regex: searchQuery, $options: "i" } }, // Search by email
+                { name: { $regex: searchQuery, $options: "i" } },
+                { email: { $regex: searchQuery, $options: "i" } },
             ];
         }
 
-        const requestedUsers = await User.find(filter)
-            .sort({ createdAt: -1 })
-            .lean();
+        const requestedUsers = await User.find(filter).sort({ createdAt: -1 }).lean<IUser[]>();
 
         return { success: true, data: JSON.parse(JSON.stringify(requestedUsers)) || [] };
     } catch (error) {
@@ -178,23 +172,23 @@ export const getBorrowRecords = async (searchQuery?: string) => {
     try {
         await connectToMongoDB();
 
-        const filter: Record<string, any> = {};
+        const filter: Record<string, unknown> = {};
 
         if (searchQuery) {
             const users = await User.find({ name: { $regex: searchQuery, $options: "i" } }).select("_id");
             const books = await Book.find({ title: { $regex: searchQuery, $options: "i" } }).select("_id");
 
             filter["$or"] = [
-                { userId: { $in: users.map(user => user._id) } }, // Match by user name
-                { bookId: { $in: books.map(book => book._id) } }, // Match by book title
+                { userId: { $in: users.map((user) => user._id) } },
+                { bookId: { $in: books.map((book) => book._id) } },
             ];
         }
 
         const records = await BorrowRecord.find(filter)
-            .sort({ borrowDate: -1 }) 
+            .sort({ borrowDate: -1 })
             .populate("userId")
             .populate("bookId")
-            .exec();
+            .lean();
 
         return { success: true, data: JSON.parse(JSON.stringify(records)) || [] };
     } catch (error) {
@@ -211,10 +205,10 @@ export async function getPreviousStats(): Promise<IStats | null> {
 export async function saveCurrentStats(data: Omit<IStats, "date">): Promise<void> {
     await connectToMongoDB();
 
-    const oneMounthInMilliseconds = 30 * 24 * 60 * 60 * 1000;
+    const oneMonthInMilliseconds = 30 * 24 * 60 * 60 * 1000;
     const lastStat = await Stats.findOne().sort({ date: -1 });
 
-    if (lastStat && new Date().getTime() - new Date(lastStat.date).getTime() < oneMounthInMilliseconds) {
+    if (lastStat && new Date().getTime() - new Date(lastStat.date).getTime() < oneMonthInMilliseconds) {
         return;
     }
 

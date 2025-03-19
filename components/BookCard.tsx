@@ -28,7 +28,7 @@ const BookCard = async ({
   const record = await BorrowedRecord({ userId, bookId });
   const { borrowDate, status, returnDate } = record as IBorrowRecord;
 
-  const dueDate = new Date(record.dueDate); 
+  const dueDate = new Date(record.dueDate);
   const daysLeft = Math.ceil((dueDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24));
 
   const hasBorrowed = user?.borrowBooksIds?.some((id) => id.toString() === _id.toString());
@@ -36,16 +36,20 @@ const BookCard = async ({
 
 
   return (
-    <li className={cn(isLoanedBook && "w-44")}>
+    <li className="w-44">
       <Link
         href={`/books/${_id}`}
         className={cn(isLoanedBook && "w-full flex flex-col items-center")}
       >
-        <div className={isLoanedBook ? "p-4 rounded-lg" : ""} style={{ backgroundColor: `rgba(${hexToRgb(coverColor)}, 0.3)` }}>
-          <BookCover variant={isLoanedBook ? "medium" : undefined} coverColor={coverColor} coverUrl={coverUrl} />
-        </div>
+        {isLoanedBook ? (
+          <div className={isLoanedBook ? "p-4 rounded-lg" : ""} style={{ backgroundColor: `rgba(${hexToRgb(coverColor)}, 0.3)` }}>
+            <BookCover variant={isLoanedBook ? "medium" : undefined} coverColor={coverColor} coverUrl={coverUrl} />
+          </div>
+        ) : (
+          <BookCover coverColor={coverColor} coverUrl={coverUrl} />
+        )}
 
-        <div className={cn("mt-4", !isLoanedBook && "xs:max-w-40 max-w-24")}>
+        <div className="mt-4 xs:max-w-40 max-w-24">
           <p className="book-title">{title}</p>
           <p className="book-genre">{genre}</p>
         </div>

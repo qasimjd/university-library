@@ -1,7 +1,7 @@
 import React from 'react'
 import Form from "next/form";
 import { Search } from 'lucide-react';
-import SearchFormReset from './SearchFormReset';
+import AdminSearchFormReset from './AdminSearchFormReset';
 
 const AdminSearch = ({ query, pathname }: { query?: string, pathname:string }) => {
     return (
@@ -14,7 +14,7 @@ const AdminSearch = ({ query, pathname }: { query?: string, pathname:string }) =
             />
 
             <div className="flex gap-2">
-                {query?.trim() && <SearchFormReset />}
+                {query?.trim() && <AdminSearchFormReset pathname={pathname} />}
 
                 <button type="submit" className="search-btn text-white">
                     <Search color='gray' className="size-5" />

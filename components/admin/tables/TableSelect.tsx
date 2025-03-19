@@ -50,14 +50,22 @@ const AdminSelect = ({ selectOption, userId, type }: Props) => {
             defaultValue={userStatus}
             onValueChange={(value) => {
                 setUserStatus(value as UserStatus);
-                type === "userRole" ? handleToggleUserRole() : type === "userStatus" ? handleToggleUserStatus(value as UserStatus) : handleToggleBorrowedStatus(value as BORROW_STATUS_ENUM);
+
+                if (type === "userRole") {
+                    handleToggleUserRole();
+                } else if (type === "userStatus") {
+                    handleToggleUserStatus(value as UserStatus);
+                } else {
+                    handleToggleBorrowedStatus(value as BORROW_STATUS_ENUM);
+                }
             }}
-        >            <SelectTrigger className="cursor-pointer border-none  text-white rounded-lg shadow-sm w-32 hover:bg-gray-800">
+        >
+            <SelectTrigger className="cursor-pointer border-none  text-white rounded-lg shadow-sm w-32 hover:bg-gray-800">
                 <SelectValue placeholder={userStatus} />
             </SelectTrigger>
             <SelectContent className="bg-gray-900 border border-gray-700 hover:bg-gray-900 rounded-lg shadow-lg">
                 <SelectItem value={type === "userRole" ? "user" : type === "userStatus" ? "reject" : "borrow"} className="confirm-approve">
-                    <div className={`flex items-center cursor-pointer justify-between px-3 py-1 w-20 rounded-full ${type === "borrowStatus" ? "bg-purple-100 text-purple-700 font-medium": "bg-pink-100 text-pink-700 font-medium"}`}>
+                    <div className={`flex items-center cursor-pointer justify-between px-3 py-1 w-20 rounded-full ${type === "borrowStatus" ? "bg-purple-100 text-purple-700 font-medium" : "bg-pink-100 text-pink-700 font-medium"}`}>
                         {type === "userRole" ? "User" : type === "userStatus" ? "Reject" : "Borrow"}
                     </div>
                 </SelectItem>
