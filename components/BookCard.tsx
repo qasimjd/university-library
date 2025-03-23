@@ -36,28 +36,28 @@ const BookCard = async ({
 
 
   return (
-    <li className="w-44">
+    <li>
       <Link
         href={`/books/${_id}`}
-        className={cn(isLoanedBook && "w-full flex flex-col items-center")}
+        className={cn(isLoanedBook && "flex flex-col")}
       >
         {isLoanedBook ? (
-          <div className={isLoanedBook ? "p-4 rounded-lg" : ""} style={{ backgroundColor: `rgba(${hexToRgb(coverColor)}, 0.3)` }}>
-            <BookCover variant={isLoanedBook ? "medium" : undefined} coverColor={coverColor} coverUrl={coverUrl} />
+          <div className="p-4 rounded-lg" style={{ backgroundColor: `rgba(${hexToRgb(coverColor)}, 0.3)` }}>
+            <BookCover coverColor={coverColor} coverUrl={coverUrl} />
           </div>
         ) : (
           <BookCover coverColor={coverColor} coverUrl={coverUrl} />
         )}
 
-        <div className="mt-4 xs:max-w-40 max-w-24">
+        <div className="xs:max-w-40 max-w-28">
           <p className="book-title">{title}</p>
           <p className="book-genre">{genre}</p>
         </div>
       </Link>
 
       {isLoanedBook && (
-        <div className="flex text-xs xs:text-sm flex-col mt-2 gap-1 w-full">
-          <div className="book-loaned flx gap-1 items-center">
+        <div className="flex items-start text-xs xs:text-sm flex-col mt-2 gap-1 w-full">
+          <div className="book-loaned flx gap-1">
             <Image
               src="/icons/book-2.svg"
               alt="user"

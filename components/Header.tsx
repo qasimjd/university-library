@@ -24,8 +24,8 @@ const Header = () => {
       <div className="flex items-center justify-between max-w-7xl mx-auto">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
-          <Image src="/icons/logo.svg" alt="logo" width={37} height={37} />
-          <h1 className="text-2xl font-semibold text-gray-200 max-md:hidden">BooWise</h1>
+          <Image src="/icons/logo.svg" alt="logo" width={30} height={30} className="md:w-37 md:h-37" />
+          <h1 className="text-xl font-semibold text-gray-200 md:text-2xl">BookWise</h1>
         </Link>
 
         {/* Desktop Menu */}

@@ -9,15 +9,8 @@ const Home = async () => {
   const userId = session?.user?.id;
 
   const result = await getBooksforRoot(userId || "");
-
-  if (!result.success) {
-    return <p>Error loading books</p>;
-  }
-
   const books = result.data;
-  if (!books) return null;
-
-  const index = Math.floor(Math.random() * books.length)
+  const index = books ? Math.floor(Math.random() * books.length) : 0;
 
   return (
     <>

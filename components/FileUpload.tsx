@@ -21,7 +21,10 @@ interface AuthResponse {
 
 const authenticator = async (): Promise<AuthResponse> => {
   try {
-    const response = await fetch(`${config.env.apiEndpoint}/api/auth/imagekit`);
+
+    const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL!;
+
+    const response = await fetch(`${baseUrl}/api/auth/imagekit`);
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -31,9 +34,9 @@ const authenticator = async (): Promise<AuthResponse> => {
     return await response.json();
   } catch (error) {
     if (error instanceof Error) {
-      throw new Error(`Authentication request failed: ${error.message}`);
+      throw new Error(`1Authentication request failed: ${error.message}`);
     }
-    throw new Error("An unknown error occurred while authenticating.");
+    throw new Error("2An unknown error occurred while authenticating.");
   }
 };
 
@@ -76,9 +79,10 @@ const FileUpload = ({
     console.log(error);
 
     if (error instanceof Error) {
-      toast.error(`Your ${type} could not be uploaded. Please try again. Error: ${error.message}`);
+      toast.error(`3Your ${type} could not be uploaded. Please try again. Error: ${error.message}`);
     } else {
-      toast.error(`Your ${type} could not be uploaded. Please try again.`);
+      toast.error(`4Your ${type} could not be uploaded. Please try again.`);
+      console.log("Error: ", error);
     }
   };
 
@@ -127,7 +131,7 @@ const FileUpload = ({
       >
         <Image src="/icons/upload.svg" alt="upload-icon" width={20} height={20} className="object-contain" />
         <p className={cn("text-base", styles.placeholder)}>{placeholder}</p>
-        {file.filePath && <p className={cn("upload-filename", styles.text)}>{file.filePath}</p>}
+        {file.filePath && <p className={cn("upload-filename", styles.text)}>"Image upload successfully."</p>}
       </button>
 
       {progress > 0 && progress !== 100 && (

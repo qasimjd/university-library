@@ -70,10 +70,9 @@ export const getBooksforRoot = async (userId: string) => {
             _id: { $nin: user.borrowBooksIds },
         }).sort({ createdAt: -1 }).lean<IBook[]>();
 
-        return {
-            success: true,
-            data: books,
-        };
+        if (!books) return { success: false, error: "Books not found" };
+
+        return { success: true, data: books };
     } catch (error) {
         console.error("Error fetching books:", error);
         return { success: false, error: (error as Error).message };

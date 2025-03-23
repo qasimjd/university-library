@@ -27,7 +27,7 @@ export function LogoutDialog() {
                     backgroundBlendMode: "overlay",
                 }}>
                 <DialogHeader className="text-center">
-                    <DialogTitle className="text-lg font-semibold text-white">Sign Out</DialogTitle>
+                    <DialogTitle className="text-lg font-semibold text-white">Log Out</DialogTitle>
                     <DialogDescription className="text-gray-300">
                         Are you sure you want to log out? You will need to sign in again to access your account.
                     </DialogDescription>

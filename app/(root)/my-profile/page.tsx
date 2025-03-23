@@ -6,6 +6,8 @@ import { userBorrowedBooks } from "@/lib/admin/actions/book.action";
 import StudentIDCard from "@/components/StudentIDCard";
 import { getUserProfile } from "@/lib/actions/auth.action";
 import { IBook } from "@/database/Models/book.modle";
+import { Card } from "@/components/ui/card";
+import Image from "next/image";
 
 const Page = async () => {
 
@@ -24,7 +26,7 @@ const Page = async () => {
   if (!userProfile) return null;
 
   return (
-    <main className="w-full h-[5px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+    <main className="w-full grid grid-cols-1 lg:grid-cols-2 gap-8">
 
       <section className="md:col-span-1 flex justify-center">
         <StudentIDCard userProfile={userProfile} />
@@ -34,7 +36,13 @@ const Page = async () => {
         {books && books.length > 0 ? (
           <BookList title="Borrowed Books" books={books} containerClassName="mx-auto" />
         ) : (
-          <h1 className="text-center text-gray-100">No borrowed books</h1>
+          <Card className="bg-gray-900 text-gray-300 flex flex-col justify-center items-center border-none p-4">
+            <Image src="/images/no-data.png" className="invert opacity-15" alt="empty" width={100} height={100} />
+            <div className="text-center">
+                <h2 className="text-lg font-semibold">No Borrowed Books Yet</h2>
+                <p className="text-sm text-gray-400">Explore the library and borrow your first book today!</p>
+            </div>
+          </Card>
         )}
       </section>
     </main>

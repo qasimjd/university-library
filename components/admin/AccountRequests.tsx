@@ -25,7 +25,7 @@ const AccountRequests = ({ users }: { users: IUser[] }) => {
                 {user.fullName.split(" ").map((n) => n.charAt(0)).join("").substring(0, 2) || "U"}
               </AvatarFallback>
             </Avatar>
-            <div className="flex-1 flex justify-center items-center flex-col">
+            <div className="flex-1 flex justify-center items-center flex-col w-24">
               <p className="font-medium text-white">{user.fullName}</p>
               <p className="text-sm text-gray-500">{user.email}</p>
             </div>

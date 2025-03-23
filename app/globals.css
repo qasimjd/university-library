@@ -109,7 +109,7 @@
 
   /* Book List */
   .book-list {
-    @apply mt-10 flex flex-wrap gap-5 max-xs:justify-between xs:gap-10;
+    @apply mt-10 flex flex-wrap gap-5 max-sm:justify-evenly xs:gap-10;
   }
 
   /* Book Overview */

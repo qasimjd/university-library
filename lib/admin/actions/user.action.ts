@@ -26,7 +26,7 @@ export const getAllUsers = async (searchQuery?: string) => {
             ];
         }
 
-        const users: IUser[] = await User.find(filter).lean();
+        const users: IUser[] = await User.find(filter).sort({ createdAt: -1 }).lean();
 
         return { success: true, data: JSON.parse(JSON.stringify(users)) || [] };
     } catch (error) {
