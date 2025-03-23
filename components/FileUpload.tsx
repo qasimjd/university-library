@@ -131,7 +131,7 @@ const FileUpload = ({
       >
         <Image src="/icons/upload.svg" alt="upload-icon" width={20} height={20} className="object-contain" />
         <p className={cn("text-base", styles.placeholder)}>{placeholder}</p>
-        {file.filePath && <p className={cn("upload-filename", styles.text)}>"Image upload successfully."</p>}
+        {file.filePath && <p className={cn("upload-filename", styles.text)}>Image upload successfully.</p>}
       </button>
 
       {progress > 0 && progress !== 100 && (
