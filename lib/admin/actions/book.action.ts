@@ -5,8 +5,9 @@ import { connectToMongoDB } from "@/lib/mongodb";
 import dayjs from "dayjs";
 import { z } from "zod";
 import { bookSchema } from "@/lib/valiations";
-import BorrowRecord from "@/database/Models/borrowRecords";
+import BorrowRecord, { BORROW_STATUS_ENUM } from "@/database/Models/borrowRecords";
 import User, { IUser } from "@/database/Models/user.model";
+import { auth } from "@/auth";
 
 type CreateBookParams = z.infer<typeof bookSchema>;
 type BorrowParams = {
@@ -172,7 +173,13 @@ export const BorrowedRecord = async (params: BorrowParams) => {
 
         if (!borrowedRecord) return { success: false, error: "Borrow record not found" };
 
-        return JSON.parse(JSON.stringify(borrowedRecord));
+        if (borrowedRecord.status === BORROW_STATUS_ENUM.BORROW &&
+            borrowedRecord.dueDate < new Date()) {
+            borrowedRecord.status = BORROW_STATUS_ENUM.OVERDUE;
+            await borrowedRecord.save();
+        }
+
+        return JSON.parse(JSON.stringify(borrowedRecord))
 
     } catch (error) {
         console.error("Error fetching borrow record:", error);
@@ -187,23 +194,30 @@ export const getSimmilarBooks = async (bookId: string) => {
         const book = await Book.findById(bookId).lean<IBook>();
         if (!book) return { success: false, error: "Book not found" };
 
+        const session = await auth();
+        const userId = session?.user?.id;
+        if (!userId) return { success: false, error: "User not found" };
+
+        const user = await User.findById(userId).select("borrowBooksIds").lean<IUser>();
+        const borrowedBookIds = user?.borrowBooksIds || [];
+
         const books = await Book.find({
             $or: [
                 { genre: book.genre },
                 { author: book.author },
             ],
-            _id: { $ne: book._id },
+            _id: { $ne: book._id, $nin: borrowedBookIds },
         }).limit(5).lean<IBook[]>();
 
         return {
             success: true,
-            data: books,
+            data: JSON.parse(JSON.stringify(books)),
         };
     } catch (error) {
         console.error("Error fetching similar books:", error);
         return { success: false, error: (error as Error).message };
     }
-}
+};
 
 export const searchBooks = async (query: string) => {
     await connectToMongoDB();
@@ -241,6 +255,19 @@ export async function getBookById(id: string) {
         const book = await
             Book.findById(id).lean<IBook>();
         return JSON.parse(JSON.stringify(book));
+    } catch (error) {
+        console.error("Error updating book:", error);
+        return { success: false, error: (error as Error).message };
+    }
+}
+
+export async function getBookByIds(id: string) {
+    await connectToMongoDB();
+    try {
+        const book = await Book.findById(id).lean<IBook>();
+        if (!book) return { success: false, error: "Book not found" };
+        return JSON.parse(JSON.stringify(book));
+
     } catch (error) {
         console.error("Error updating book:", error);
         return { success: false, error: (error as Error).message };

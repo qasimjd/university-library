@@ -26,15 +26,15 @@ const Page = async () => {
   if (!userProfile) return null;
 
   return (
-    <main className="w-full grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <main className="w-full grid grid-cols-1 lg:grid-cols-3 gap-8">
 
       <section className="md:col-span-1 flex justify-center">
         <StudentIDCard userProfile={userProfile} />
       </section>
 
-      <section className="md:col-span-1">
+      <section className="md:col-span-2">
         {books && books.length > 0 ? (
-          <BookList title="Borrowed Books" books={books} containerClassName="mx-auto" />
+          <BookList title="Borrowed Books" books={books} containerClassName="" />
         ) : (
           <Card className="bg-gray-900 text-gray-300 flex flex-col justify-center items-center border-none p-4">
             <Image src="/images/no-data.png" className="invert opacity-15" alt="empty" width={100} height={100} />

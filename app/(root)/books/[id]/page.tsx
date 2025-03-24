@@ -1,15 +1,13 @@
 import BookList from '@/components/BookList';
 import BookOverview from '@/components/BookOverview'
 import BookVideo from '@/components/bookVideo';
-import Book, { IBook } from '@/database/Models/book.modle'
-import { getSimmilarBooks } from '@/lib/admin/actions/book.action';
-import { notFound } from 'next/navigation'
+import { IBook } from '@/database/Models/book.modle'
+import { getBookByIds, getSimmilarBooks } from '@/lib/admin/actions/book.action';
 
 const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
 
     const { id } = await params
-    const bookDetails = await Book.findById(id).lean<IBook>();
-    if (!bookDetails) return notFound()
+    const bookDetails = await getBookByIds(id);
 
     const res = await getSimmilarBooks(id)
     const books = res.data as IBook[];
@@ -37,7 +35,7 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
                 </div>
 
                 {books.length > 0 && (
-                    <section className="w-1/3 flex ">
+                    <section className="w-full lg:w-1/3">
                         <BookList title="Similer Books" books={books} />
                     </section>
                 )}

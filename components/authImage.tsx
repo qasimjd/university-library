@@ -19,8 +19,9 @@ const BookCard = ({coverColor, coverUrl }: IBook) => {
 
 export async function MarqueeDemoVertical() {
   const books = await fetchBooks();
-  const firstRow = books ? books.slice(0, books.length / 2) : [];
-  const secondRow = books ? books.slice(books.length / 2) : [];
+  const firstRow = books ? books.slice(0, Math.floor(books.length / 3)) : [];
+  const secondRow = books ? books.slice(Math.floor(books.length / 3), Math.floor(2 * books.length / 3)) : [];
+  const therdRow = books ? books.slice(Math.floor(2 * books.length / 3)) : [];
 
   return (
     <div className="relative flex w-full max-h-40 sm:max-h-screen flex-row items-center justify-center overflow-hidden brightness-50">
@@ -35,7 +36,7 @@ export async function MarqueeDemoVertical() {
         ))}
       </Marquee>
       <Marquee pauseOnHover vertical className="[--duration:90s]">
-        {secondRow.map((book) => (
+        {therdRow.map((book) => (
           <BookCard key={book._id.toString()} {...book} />
         ))}
       </Marquee>

@@ -94,7 +94,7 @@ const BookCard = async ({
                   className="object-contain"
                 />
               }
-              <p className={cn(daysLeft > 0 ? "text-gray-100" : "text-red")}>
+              <p className={status === BORROW_STATUS_ENUM.OVERDUE ? "text-red" : "text-gray-100"}>
                 {status === BORROW_STATUS_ENUM.BORROW && daysLeft > 0 ? `${daysLeft} day${daysLeft > 1 ? 's' : ''} left to due` : status === BORROW_STATUS_ENUM.OVERDUE ? 'Over Due' : returnDate ? `Returned on ${formatDayMonth(returnDate)}` : ''}
               </p>
             </div>

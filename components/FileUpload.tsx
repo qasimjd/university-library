@@ -22,7 +22,7 @@ interface AuthResponse {
 const authenticator = async (): Promise<AuthResponse> => {
   try {
 
-    const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL!;
+    const baseUrl = process.env.NEXT_PUBLIC_API_ENDPOINT!;
 
     const response = await fetch(`${baseUrl}/api/auth/imagekit`);
 
