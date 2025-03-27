@@ -2,6 +2,8 @@ import { auth } from "@/auth";
 import BookList from "@/components/BookList";
 import BookOverview from "@/components/BookOverview";
 import { getBooksforRoot } from "@/lib/admin/actions/book.action";
+import { Loader } from "lucide-react";
+import { Suspense } from "react"
 
 const Home = async () => {
 
@@ -14,19 +16,22 @@ const Home = async () => {
 
   return (
     <>
-      {books && books.length > 0 && (
-        <BookOverview {...books[index]} />
-      )}
+      <Suspense fallback={<div className="w-full h-[40vh] flex items-center justify-center"><Loader className="animate-spin text-gray-400" size={40} /></div>}>
+        {books && books.length > 0 && (
+          <BookOverview {...books[index]} />
+        )}
 
-      {books && books.length > 2 && (
-        <BookList
-          title="Latest Books"
-          books={books}
-          containerClassName="mt-28"
-        />
-      )}
+        {books && books.length > 2 && (
+          <BookList
+            title="Latest Books"
+            books={books}
+            containerClassName="mt-28"
+          />
+        )}
+      </Suspense>
     </>
   );
 };
+
 
 export default Home;

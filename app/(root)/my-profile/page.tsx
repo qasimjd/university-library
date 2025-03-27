@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { auth } from "@/auth";
 import BookList from "@/components/BookList";
 import { notFound } from "next/navigation";
@@ -8,6 +8,7 @@ import { getUserProfile } from "@/lib/actions/auth.action";
 import { IBook } from "@/database/Models/book.modle";
 import { Card } from "@/components/ui/card";
 import Image from "next/image";
+import { Loader } from "lucide-react";
 
 const Page = async () => {
 
@@ -26,27 +27,28 @@ const Page = async () => {
   if (!userProfile) return null;
 
   return (
-    <main className="w-full grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <Suspense fallback={<div className="w-full h-[40vh] flex items-center justify-center"><Loader className="animate-spin text-gray-400" size={40} /></div>}>
+      <main className="w-full grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-      <section className="md:col-span-1 flex justify-center">
-        <StudentIDCard userProfile={userProfile} />
-      </section>
+        <section className="md:col-span-1 flex justify-center">
+          <StudentIDCard userProfile={userProfile} />
+        </section>
 
-      <section className="md:col-span-2">
-        {books && books.length > 0 ? (
-          <BookList title="Borrowed Books" books={books} containerClassName="" />
-        ) : (
-          <Card className="bg-gray-900 text-gray-300 flex flex-col justify-center items-center border-none p-4">
-            <Image src="/images/no-data.png" className="invert opacity-15" alt="empty" width={100} height={100} />
-            <div className="text-center">
+        <section className="md:col-span-2">
+          {books && books.length > 0 ? (
+            <BookList title="Borrowed Books" books={books} containerClassName="" />
+          ) : (
+            <Card className="bg-gray-900 text-gray-300 flex flex-col justify-center items-center border-none p-4">
+              <Image src="/images/no-data.png" className="invert opacity-15" alt="empty" width={100} height={100} />
+              <div className="text-center">
                 <h2 className="text-lg font-semibold">No Borrowed Books Yet</h2>
                 <p className="text-sm text-gray-400">Explore the library and borrow your first book today!</p>
-            </div>
-          </Card>
-        )}
-      </section>
-    </main>
-
+              </div>
+            </Card>
+          )}
+        </section>
+      </main>
+    </Suspense>
   );
 };
 export default Page;

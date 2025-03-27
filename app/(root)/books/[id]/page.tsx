@@ -3,6 +3,8 @@ import BookOverview from '@/components/BookOverview'
 import BookVideo from '@/components/bookVideo';
 import { IBook } from '@/database/Models/book.modle'
 import { getBookByIds, getSimmilarBooks } from '@/lib/admin/actions/book.action';
+import { Loader } from 'lucide-react';
+import { Suspense } from 'react';
 
 const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
 
@@ -14,32 +16,36 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
 
     return (
         <>
-            <BookOverview {...bookDetails} />
+            <Suspense fallback={<div className="w-full h-[40vh] flex items-center justify-center"><Loader className="animate-spin text-gray-400" size={40} /></div>}>
 
-            <div className="book-details">
-                <div className="flex-[1.5]">
-                    <section className="flex flex-col gap-7">
-                        <h3>Video</h3>
+                <BookOverview {...bookDetails} />
 
-                        <BookVideo videoUrl={bookDetails.videoUrl || ""} />
-                    </section>
-                    <section className="mt-10 flex flex-col gap-7">
-                        <h3>Summary</h3>
+                <div className="book-details">
+                    <div className="flex-[1.5]">
+                        <section className="flex flex-col gap-7">
+                            <h3>Video</h3>
 
-                        <div className="space-y-5 text-xl text-light-100">
-                            {bookDetails.summary.split("\n").map((line: string, i: number) => (
-                                <p key={i}>{line}</p>
-                            ))}
-                        </div>
-                    </section>
+                            <BookVideo videoUrl={bookDetails.videoUrl || ""} />
+                        </section>
+                        <section className="mt-10 flex flex-col gap-7">
+                            <h3>Summary</h3>
+
+                            <div className="space-y-5 text-xl text-light-100">
+                                {bookDetails.summary.split("\n").map((line: string, i: number) => (
+                                    <p key={i}>{line}</p>
+                                ))}
+                            </div>
+                        </section>
+                    </div>
+
+                    {books.length > 0 && (
+                        <section className="w-full lg:w-1/3">
+                            <BookList title="Similer Books" books={books} />
+                        </section>
+                    )}
                 </div>
+            </Suspense>
 
-                {books.length > 0 && (
-                    <section className="w-full lg:w-1/3">
-                        <BookList title="Similer Books" books={books} />
-                    </section>
-                )}
-            </div>
         </>
     );
 };
