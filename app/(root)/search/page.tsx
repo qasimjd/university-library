@@ -1,9 +1,7 @@
 import SearchBar from '@/components/SearchBar'
 import React, { Suspense } from 'react'
 import { searchBooks } from "@/lib/admin/actions/book.action";
-import BookCard from '@/components/BookCard';
 import Image from 'next/image';
-import { IBook } from '@/database/Models/book.modle';
 import { Loader } from 'lucide-react';
 import BookList from '@/components/BookList';
 
