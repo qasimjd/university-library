@@ -84,7 +84,7 @@ export async function signUp(params: Partial<IUser>) {
     console.error("Error in signUp:", error);
     
     // Handle specific MongoDB duplicate key error
-    if (error instanceof Error && 'code' in (error as any) && (error as any).code === 11000) {
+    if (error instanceof Error && 'code' in error && (error as Error & { code: number }).code === 11000) {
       return { success: false, error: "Email already exists. Please use a different email address or sign in." };
     }
     

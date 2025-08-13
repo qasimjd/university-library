@@ -61,8 +61,6 @@ const AuthForm = <T extends FieldValues>({
       } else {
         toast.error(result.error);
       }
-    } catch (error) {
-      toast.error("An unexpected error occurred");
     } finally {
       setSubmitting(false);
     }

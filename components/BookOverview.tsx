@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import React from 'react'
 import BookCover from './BookCover'
 import { IBook } from '@/database/Models/book.modle'
