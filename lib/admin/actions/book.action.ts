@@ -64,19 +64,53 @@ export const getBooksforRoot = async (userId: string) => {
     try {
         await connectToMongoDB();
 
-        const user = await User.findById(userId).select("borrowBooksIds").lean<IUser>();
-        if (!user) throw new Error("User not found");
+        // If userId is empty, just return all books to avoid unnecessary query
+        if (!userId) {
+            const books = await Book.find({})
+                .sort({ createdAt: -1 })
+                .limit(20) // Limit to 20 books for faster loading
+                .select('_id title author genre rating totalCopies availableCopies description coverColor coverUrl')
+                .lean<IBook[]>();
+                
+            return { success: true, data: books };
+        }
 
+        const user = await User.findById(userId).select("borrowBooksIds").lean<IUser>();
+        if (!user) {
+            // If user not found, return all books but limited
+            const books = await Book.find({})
+                .sort({ createdAt: -1 })
+                .limit(20)
+                .select('_id title author genre rating totalCopies availableCopies description coverColor coverUrl')
+                .lean<IBook[]>();
+                
+            return { success: true, data: books };
+        }
+
+        // Get books not borrowed by user with optimized query
         const books = await Book.find({
             _id: { $nin: user.borrowBooksIds },
-        }).sort({ createdAt: -1 }).lean<IBook[]>();
+        })
+        .sort({ createdAt: -1 })
+        .limit(20)
+        .select('_id title author genre rating totalCopies availableCopies description coverColor coverUrl')
+        .lean<IBook[]>();
 
-        if (!books) return { success: false, error: "Books not found" };
+        if (!books || books.length === 0) {
+            // If no non-borrowed books found, return some recent books
+            const recentBooks = await Book.find({})
+                .sort({ createdAt: -1 })
+                .limit(10)
+                .select('_id title author genre rating totalCopies availableCopies description coverColor coverUrl')
+                .lean<IBook[]>();
+                
+            return { success: true, data: recentBooks };
+        }
 
         return { success: true, data: books };
     } catch (error) {
         console.error("Error fetching books:", error);
-        return { success: false, error: (error as Error).message };
+        return { success: false, error: (error as Error).message, data: [] };
     }
 };
 

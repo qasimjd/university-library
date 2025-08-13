@@ -4,7 +4,8 @@ import BookCover from './BookCover'
 import { IBook } from '@/database/Models/book.modle'
 import BorrowBook from './BorrowBook'
 import { auth } from '@/auth'
-import User from '@/database/Models/user.model'
+import { checkUserBorrowedBook } from '@/lib/actions/user.actions'
+import { renderStars } from './ui/renderStars'
 
 const BookOverview = async ({
     title,
@@ -19,15 +20,12 @@ const BookOverview = async ({
     _id
 
 }: IBook) => {
-
     const session = await auth()
     const userId = session?.user?.id
     if (!userId) return null
     
-    const user = await User.findOne({ _id: userId });
     const bookId = _id.toString()
-
-    const hasBorrowed = user?.borrowBooksIds?.some((id) => id.toString() === _id.toString());
+    const hasBorrowed = await checkUserBorrowedBook(userId, bookId);
 
     return (
         <main>
@@ -45,9 +43,8 @@ const BookOverview = async ({
                             <span className="font-semibold text-light-200">{genre}</span>
                         </p>
 
-                        <div className="flex flex-row gap-1">
-                            <Image src="/icons/star.svg" alt="star" width={22} height={22} />
-                            <p>{rating}</p>
+                        <div className="flex items-center">
+                            {renderStars(rating)}
                         </div>
 
                     </div>

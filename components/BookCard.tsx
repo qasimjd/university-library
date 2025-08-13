@@ -5,10 +5,20 @@ import { cn, formatDayMonth, hexToRgb } from "@/lib/utils";
 import Image from "next/image";
 import { IBook } from "@/database/Models/book.modle";
 import { auth } from "@/auth";
-import User from "@/database/Models/user.model";
 import BorrowReceipt from "./BorrowReceipt";
 import { BorrowedRecord } from "@/lib/admin/actions/book.action";
-import { BORROW_STATUS_ENUM, IBorrowRecord } from "@/database/Models/borrowRecords";
+import { BORROW_STATUS_ENUM } from "@/database/Models/borrowRecords";
+import { unstable_cache } from 'next/cache';
+import { checkUserBorrowedBook } from '@/lib/actions/user.actions';
+
+// Cache the borrow record fetching
+const getCachedBorrowRecord = unstable_cache(
+  async (userId: string, bookId: string) => {
+    return await BorrowedRecord({ userId, bookId });
+  },
+  ['borrow-record'],
+  { revalidate: 60 * 5 } // Cache for 5 minutes
+);
 
 const BookCard = async ({
   _id,
@@ -17,21 +27,29 @@ const BookCard = async ({
   coverColor,
   coverUrl,
 }: IBook) => {
-
   const session = await auth()
   const userId = session?.user?.id
   if (!userId) return null
-  const user = await User.findOne({ _id: userId });
-
+  
   const bookId = _id.toString();
+  
+  const [hasBorrowed, record] = await Promise.all([
+    checkUserBorrowedBook(userId, bookId),
+    getCachedBorrowRecord(userId, bookId)
+  ]);
+  
+  let daysLeft = 0;
+  let borrowDate, status, returnDate;
+  
+  if (record) {
+    borrowDate = record.borrowDate;
+    status = record.status;
+    returnDate = record.returnDate;
+    
+    const dueDate = new Date(record.dueDate);
+    daysLeft = Math.ceil((dueDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24));
+  }
 
-  const record = await BorrowedRecord({ userId, bookId });
-  const { borrowDate, status, returnDate } = record as IBorrowRecord;
-
-  const dueDate = new Date(record.dueDate);
-  const daysLeft = Math.ceil((dueDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24));
-
-  const hasBorrowed = user?.borrowBooksIds?.some((id) => id.toString() === _id.toString());
   const isLoanedBook = hasBorrowed;
 
 

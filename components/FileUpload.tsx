@@ -22,9 +22,9 @@ interface AuthResponse {
 const authenticator = async (): Promise<AuthResponse> => {
   try {
 
-    const baseUrl = process.env.NEXT_PUBLIC_API_ENDPOINT!;
+    // const baseUrl = process.env.NEXT_PUBLIC_API_ENDPOINT!;
 
-    const response = await fetch(`${baseUrl}/api/auth/imagekit`);
+    const response = await fetch("/api/auth/imagekit");
 
     if (!response.ok) {
       const errorText = await response.text();

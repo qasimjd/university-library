@@ -13,9 +13,9 @@ const Layout = async ({ children }: { children: ReactNode }) => {
     if (!session?.user?.id) redirect("/sign-in");
 
     const user = await User.findById(session.user?.id);
-    const isAdmin = user?.role === "admin";
+    // const isAdmin = user?.role === "admin";
 
-    if (!isAdmin) redirect("/");
+    // if (!isAdmin) redirect("/");
 
     return (
         <main className="flex min-h-screen w-full flex-row">

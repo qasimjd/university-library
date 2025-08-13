@@ -44,13 +44,19 @@ export const signInWithCredentials = async (params: Pick<IUser, "email" | "passw
 export async function signUp(params: Partial<IUser>) {
   const { fullName, email, password, universityId, universityCard } = params;
 
-  if (!email || !password || !fullName || !universityId || !universityCard) {
-    return { success: false, error: "All fields are required" };
+  if (!email || !password || !fullName || !universityId) {
+    return { success: false, error: "Please provide all required fields: full name, email, password, and university ID." };
   }
 
   await connectToMongoDB();
 
   try {
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return { success: false, error: "Email already exists. Please use a different email address or sign in." };
+    }
+    
+    // Create new user if email doesn't exist
     const user = new User({
       fullName,
       email,
@@ -76,7 +82,13 @@ export async function signUp(params: Partial<IUser>) {
     return { success: true };
   } catch (error) {
     console.error("Error in signUp:", error);
-    return { success: false, error: "Something went wrong in creating User" };
+    
+    // Handle specific MongoDB duplicate key error
+    if (error instanceof Error && 'code' in (error as any) && (error as any).code === 11000) {
+      return { success: false, error: "Email already exists. Please use a different email address or sign in." };
+    }
+    
+    return { success: false, error: "Something went wrong in creating User. Please try again." };
   }
 }
 

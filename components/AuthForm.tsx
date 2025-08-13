@@ -25,6 +25,7 @@ import { FIELD_NAMES, FIELD_TYPES } from "@/constants";
 import { useRouter } from "next/navigation";
 import FileUpload from "./FileUpload";
 import { toast } from "sonner"
+import { useState } from "react";
 
 
 interface Props<T extends FieldValues> {
@@ -41,6 +42,7 @@ const AuthForm = <T extends FieldValues>({
   onSubmit,
 }: Props<T>) => {
   const router = useRouter();
+  const [submitting, setSubmitting] = useState(false);
 
   const isSignIn = type === "SIGN_IN";
 
@@ -50,12 +52,19 @@ const AuthForm = <T extends FieldValues>({
   });
 
   const handleSubmit: SubmitHandler<T> = async (data) => {
-    const result = await onSubmit(data);
-    if (result.success) {
-      router.push("/");
-      toast.success("Welcome to BookWise");
-    } else {
-      toast.error(result.error);
+    setSubmitting(true);
+    try {
+      const result = await onSubmit(data);
+      if (result.success) {
+        router.push("/");
+        toast.success("Welcome to BookWise");
+      } else {
+        toast.error(result.error);
+      }
+    } catch (error) {
+      toast.error("An unexpected error occurred");
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -87,15 +96,15 @@ const AuthForm = <T extends FieldValues>({
                   <FormControl>
                     {field.name === "universityCard" ? (
 
-                      <FileUpload 
-                      onFileChange={field.onChange}
-                      type="image"
-                      accept="image/*"
-                      placeholder="Upload your university ID"
-                      folder="university-cards"
-                      variant="user"
-                      value={field.value}
-                       />
+                      <FileUpload
+                        onFileChange={field.onChange}
+                        type="image"
+                        accept="image/*"
+                        placeholder="Upload your university ID"
+                        folder="university-cards"
+                        variant="user"
+                        value={field.value}
+                      />
 
                     ) : (
                       <Input
@@ -114,8 +123,8 @@ const AuthForm = <T extends FieldValues>({
             />
           ))}
 
-          <Button type="submit" className="form-btn">
-            {isSignIn ? "Sign In" : "Sign Up"}
+          <Button type="submit" disabled={submitting} className="form-btn">
+            {submitting ? "Loading..." : isSignIn ? "Sign In" : "Sign Up"}
           </Button>
         </form>
       </Form>

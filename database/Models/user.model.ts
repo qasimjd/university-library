@@ -39,7 +39,7 @@ const UserSchema: Schema<IUser> = new Schema(
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     universityId: { type: Number, required: true },
-    universityCard: { type: String, required: true },
+    universityCard: { type: String, required: false },
     borrowBooksIds: [{ type: Schema.Types.ObjectId, ref: "Book" }],
     status: {
       type: String,
