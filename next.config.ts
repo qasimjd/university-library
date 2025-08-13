@@ -33,8 +33,6 @@ const nextConfig: NextConfig = {
   experimental: {
     optimizeCss: true,
   },
-  // Optimize fonts for faster loading
-  optimizeFonts: true,
   // Cache aggressively for better performance
   headers: async () => {
     return [
