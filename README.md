@@ -21,7 +21,6 @@ The University Library Management System is a scalable platform created with Nex
 - **Borrow Records**: Complete borrowing history with search options.  
 - **Role Management**: Change user roles and send notifications.  
 - **Advanced Functionalities**: Including caching and DDoS protection.  
-- **Efficient Caching**: Powered by Upstash Redis.  
 - **Modern UI/UX**: Developed with TailwindCSS and other modern tools.  
 
 This platform combines advanced features and a robust architecture for effective library management.
