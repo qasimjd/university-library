@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   Sheet,
   SheetContent,
@@ -18,16 +18,10 @@ import { Home, Menu, Search, User } from "lucide-react";
 const Header = () => {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
-  
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   return (
-    <header className="sticky top-0 z-50 mt-6 bg-gray-900 px-6 py-3 shadow-md rounded-lg w-full">
-      <div style={{ width: '100%', visibility: mounted ? 'visible' : 'hidden' }} className="flex items-center justify-between w-full mx-auto">
-        {/* Logo */}
+    <header className="sticky top-0 z-50 mt-6 w-full rounded-2xl border border-white/10 bg-slate-950/90 px-6 py-3 shadow-[0_10px_30px_rgba(0,0,0,0.25)] backdrop-blur-xl">
+      <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-4">
         <div className="min-w-[180px] md:min-w-[200px]">
           <Link href="/" className="flex items-center gap-2">
             <div className="w-[30px] h-[30px] md:w-[37px] md:h-[37px] flex-shrink-0">
@@ -37,7 +31,6 @@ const Header = () => {
           </Link>
         </div>
 
-        {/* Desktop Menu */}
         <ul className="hidden md:flex flex-row gap-6 items-center flex-grow justify-center min-w-[300px]">
           <li className="min-w-[60px] text-center">
             <Link href="/" className={`hover:text-primary ${pathname === "/" ? "text-primary" : "text-white"} block`}>
@@ -55,11 +48,10 @@ const Header = () => {
             </Link>
           </li>
         </ul>
-        <div className="hidden md:block min-w-[100px]">
+        <div className="hidden md:block min-w-[100px] shrink-0">
           <LogoutDialog />
         </div>
 
-        {/* Mobile Menu Button */}
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
           <SheetTrigger className="md:hidden">
             <Menu size={28} color="white" />

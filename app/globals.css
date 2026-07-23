@@ -4,6 +4,15 @@
 
 @layer base {
 
+html {
+  scrollbar-gutter: stable;
+  overflow-y: scroll;
+}
+
+body {
+  min-height: 100vh;
+}
+
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -251,15 +260,15 @@
 
 @layer utilities {
   .gradient-vertical {
-    background: linear-gradient(180deg, #12141d 0%, #12151f 100%);
+    background: linear-gradient(180deg, #020617 0%, #0b0f19 100%);
   }
 
   .gradient-gray {
-    background: linear-gradient(270deg, #37363a 0%, #353637 100%);
+    background: linear-gradient(270deg, #111827 0%, #030712 100%);
   }
 
   .gradient-blue {
-    background: linear-gradient(180deg, #232839 0%, #12141d 100%);
+    background: linear-gradient(180deg, #020617 0%, #111827 100%);
   }
 
   /* Auth */
@@ -281,7 +290,9 @@
 
   /* Root */
   .root-container {
-    @apply flex min-h-screen flex-1 flex-col bg-pattern bg-cover bg-top bg-dark-100 px-5 xs:px-10 md:px-16;
+    @apply flex min-h-screen flex-1 flex-col px-5 xs:px-10 md:px-16;
+    background-color: #020202;
+    background-image: radial-gradient(circle at top, rgba(255, 255, 255, 0.08), transparent 30%), linear-gradient(180deg, #020202 0%, #05070d 45%, #0b0f19 100%);
   }
 
   /* Book Details */
