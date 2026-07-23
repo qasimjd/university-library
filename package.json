@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build --webpack",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "seed": "npx tsx database/seed.ts"
@@ -35,7 +35,7 @@
     "lucide": "^0.477.0",
     "lucide-react": "^0.475.0",
     "mongoose": "^8.11.0",
-    "next": "^16.2.11",
+    "next": "^15.5.21",
     "next-auth": "^5.0.0-beta.25",
     "next-themes": "^0.4.4",
     "react": "^19.0.0",
@@ -55,7 +55,7 @@
     "@types/react-dom": "^19",
     "critters": "^0.0.23",
     "eslint": "^9",
-    "eslint-config-next": "^16.2.11",
+    "eslint-config-next": "^15.5.21",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.8.2"
